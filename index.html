@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AzoSkibidi Script Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 50%, #1a0033 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(45, 27, 78, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(157, 78, 221, 0.3);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #b794f6, #e879f9, #c084fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .subtitle {
+            color: #d8b4fe;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(183, 148, 246, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.8)); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #d8b4fe;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(26, 0, 51, 0.5);
+            border: 2px solid rgba(192, 132, 252, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #c084fc;
+            box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.1);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(216, 180, 254, 0.4);
+        }
+
+        .input-hint {
+            color: rgba(216, 180, 254, 0.6);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, #9d4edd, #c77dff);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(157, 78, 221, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-install {
+            background: linear-gradient(45deg, #10b981, #059669);
+            margin-bottom: 10px;
+        }
+
+        .btn-install:hover {
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(192, 132, 252, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .output-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .output-section.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        textarea {
+            min-height: 400px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            color: #6ee7b7;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: pulse 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(216, 180, 254, 0.5);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AzoSkibidi Script Generator</h1>
+            <p class="subtitle">Giúp bạn quên mất cách dùng não</p>
+        </div>
+
+        <form id="generatorForm">
+            <div class="form-group">
+                <label for="domain">🌐 Tên miền</label>
+                <input type="text" id="domain" placeholder="vd: example.azota.vn" required>
+                <p class="input-hint">Nhập domain mà bạn muốn script hoạt động (không cần https://)</p>
+            </div>
+
+            <div class="form-group">
+                <label for="groqKey">🔑 Groq API Key</label>
+                <input type="password" id="groqKey" placeholder="gsk_..." required>
+                <p class="input-hint">Lấy miễn phí tại: <a href="https://console.groq.com/keys" target="_blank" style="color: #c084fc;">console.groq.com/keys</a></p>
+            </div>
+
+            <button type="submit" class="btn">✨ Tạo Script</button>
+        </form>
+
+        <div class="output-section" id="outputSection">
+            <div class="success-message" id="successMessage">
+                ✅ Script đã được tạo thành công!
+            </div>
+
+            <div class="form-group">
+                <label for="output">📝 Tampermonkey Script</label>
+                <textarea id="output" readonly></textarea>
+            </div>
+
+            <button class="btn btn-install" onclick="installWithTampermonkey()">🔧 Cài đặt với Tampermonkey</button>
+            <button class="btn" onclick="copyScript()">📋 Copy Script</button>
+            <button class="btn btn-secondary" onclick="downloadScript()">💾 Tải xuống (.user.js)</button>
+        </div>
+
+        <div class="footer">
+            Made with 💜 by laiduc vippro
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('generatorForm');
+        const outputSection = document.getElementById('outputSection');
+        const outputTextarea = document.getElementById('output');
+        const successMessage = document.getElementById('successMessage');
+
+        let currentDomain = '';
+        let currentCustomKey = '';
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            generateScript();
+        });
+
+        function generateScript() {
+            const domain = document.getElementById('domain').value.trim();
+            const groqKey = document.getElementById('groqKey').value.trim();
+            const customKey = 'pld_1312'; // Cố định
+
+            currentDomain = domain;
+            currentCustomKey = customKey;
+
+            const script = `// ==UserScript==
+// @name         AzoSkibidi All-in-One (${customKey})
+// @namespace    http://tampermonkey.net/
+// @version      3.0
+// @description  Loading screen + Parse câu hỏi + AI Solver - Tất cả trong 1!
+// @author       AzoSkibidi Team
+// @match        https://${domain}/*
+// @match        http://${domain}/*
+// @match        file:///*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_xmlhttpRequest
+// @connect      api.groq.com
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // ============================================
+    // CONFIG
+    // ============================================
+    const GROQ_API_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+    // 🔑 Custom Key: ${customKey}
+    let API_KEY = GM_getValue('groq_api_key', '${groqKey}');
+    let examDetected = false;
+    let observer = null;
+
+    // ============================================
+    // PART 1: LOADING SCREEN
+    // ============================================
+    const loadingStyle = document.createElement('style');
+    loadingStyle.textContent = \`
+        #azoskibidi-loading {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 50%, #1a0033 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 999999; font-family: 'Segoe UI', sans-serif; animation: fadeIn 0.5s;
+        }
+        .loading-title {
+            font-size: 48px; font-weight: 700;
+            background: linear-gradient(45deg, #b794f6, #e879f9, #c084fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; animation: glow 2s ease-in-out infinite;
+        }
+        .loading-subtitle { font-size: 24px; color: #d8b4fe; margin-bottom: 40px; animation: pulse 2s ease-in-out infinite; }
+        .spinner {
+            width: 60px; height: 60px; border: 5px solid rgba(192, 132, 252, 0.2);
+            border-top: 5px solid #c084fc; border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes glow { 0%, 100% { filter: drop-shadow(0 0 10px rgba(183, 148, 246, 0.5)); } 50% { filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.8)); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fade-out { animation: fadeOut 0.5s forwards; }
+    \`;
+    document.documentElement.appendChild(loadingStyle);
+
+    const loadingScreen = document.createElement('div');
+    loadingScreen.id = 'azoskibidi-loading';
+    loadingScreen.innerHTML = \`
+        <div class="loading-title">AzoSkibidi</div>
+        <div class="loading-subtitle">Vibe coding by ${customKey}</div>
+        <div class="spinner"></div>
+    \`;
+    document.documentElement.appendChild(loadingScreen);
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                loadingScreen.remove();
+                loadingStyle.remove();
+                checkForExam();
+            }, 500);
+        }, 1000);
+    });
+
+    // ============================================
+    // PART 2: EXAM DETECTION
+    // ============================================
+    function checkForExam() {
+        if (examDetected) return false;
+        
+        const examButton = document.querySelector('button.btn.btn-pending');
+        if (examButton && examButton.textContent.includes('Bắt đầu thi')) {
+            examDetected = true;
+            if (observer) observer.disconnect();
+            
+            showNotification('✅ Đã nhận diện được đề thi!');
+            console.log('✅ Đã nhận diện được đề thi!');
+            return true;
+        }
+        return false;
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = \`
+            position: fixed; top: 20px; right: 20px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white; padding: 16px 24px; border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
+            z-index: 999998; font-size: 16px; font-weight: 600;
+            animation: slideIn 0.5s; display: flex; gap: 10px;
+        \`;
+        notification.innerHTML = \`<span style="font-size: 24px;">✅</span><span>\${message}</span>\`;
+        
+        const style = document.createElement('style');
+        style.textContent = \`@keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }\`;
+        document.head.appendChild(style);
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.5s';
+            setTimeout(() => {
+                notification.remove();
+                style.remove();
+            }, 500);
+        }, 5000);
+    }
+
+    // ============================================
+    // PART 3: AI SOLVER STYLES
+    // ============================================
+    const aiStyles = () => {
+        const style = document.createElement('style');
+        style.textContent = \`
+            .ai-solver-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a0033, #2d1b4e, #1a0033); padding: 30px; border-radius: 15px; box-shadow: 0 8px 32px rgba(157, 78, 221, 0.4); z-index: 999999; min-width: 400px; color: #fff; }
+            .ai-solver-modal h2 { color: #9d4edd; margin-bottom: 20px; font-size: 24px; }
+            .ai-solver-modal input { width: 100%; padding: 12px; border: 2px solid #9d4edd; background: rgba(255,255,255,0.1); color: #fff; border-radius: 8px; margin-bottom: 15px; }
+            .ai-solver-modal button { width: 100%; padding: 12px; background: linear-gradient(45deg, #9d4edd, #c77dff); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+            .ai-solver-modal button:hover { transform: scale(1.05); }
+            .ai-solver-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999998; }
+            .ai-solve-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #9d4edd, #c77dff); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); z-index: 999997; transition: all 0.3s; }
+            .ai-solve-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6); }
+            .ai-solve-btn.loading { opacity: 0.7; cursor: wait; }
+            .ai-answer-badge { display: inline-block; background: linear-gradient(45deg, #10b981, #059669); color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-left: 10px; font-size: 14px; animation: fadeInScale 0.5s; }
+            @keyframes fadeInScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+            .ai-correct-answer { background: rgba(16, 185, 129, 0.2) !important; border: 2px solid #10b981 !important; animation: pulse 1s; }
+            @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+            .ai-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 10px; }
+        \`;
+        document.head.appendChild(style);
+    };
+
+    // ============================================
+    // PART 4: API KEY MANAGEMENT
+    // ============================================
+    const showApiKeyModal = () => {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.className = 'ai-solver-overlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'ai-solver-modal';
+            modal.innerHTML = \`
+                <h2>🤖 AzoSkibidi AI Solver</h2>
+                <p style="margin-bottom: 15px; color: #ddd;">Nhập Groq API Key:</p>
+                <input type="password" id="groq-api-input" placeholder="Nhập Groq API Key..." value="\${API_KEY}" />
+                <p style="font-size: 12px; color: #999; margin-bottom: 15px;">Lấy miễn phí: <a href="https://console.groq.com/keys" target="_blank" style="color: #9d4edd;">Groq Console</a></p>
+                <button id="save-api-key">Lưu & Bắt đầu</button>
+            \`;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(modal);
+            
+            const input = modal.querySelector('#groq-api-input');
+            const saveBtn = modal.querySelector('#save-api-key');
+            
+            saveBtn.onclick = () => {
+                const key = input.value.trim();
+                if (key) {
+                    API_KEY = key;
+                    GM_setValue('groq_api_key', key);
+                    overlay.remove();
+                    modal.remove();
+                    resolve(key);
+                } else {
+                    alert('Vui lòng nhập API Key!');
+                }
+            };
+            
+            input.focus();
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') saveBtn.click();
+            });
+        });
+    };
+
+    // ============================================
+    // PART 5: GROQ API CALL (WITH RETRY)
+    // ============================================
+    const callGroqAPI = async (questionText, answers, retryCount = 0) => {
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 5000; // 5 giây
+        
+        const prompt = \`Bạn là trợ lý AI giải trắc nghiệm.
+
+Câu hỏi: \${questionText}
+
+Đáp án:
+\${Object.entries(answers).map(([letter, text]) => \`\${letter}. \${text}\`).join('\\n')}
+
+Chọn đáp án đúng. CHỈ trả lời 1 chữ cái (A, B, C hoặc D), KHÔNG giải thích.\`;
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: GROQ_API_ENDPOINT,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': \`Bearer \${API_KEY}\`
+                },
+                data: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        { role: 'user', content: prompt }
+                    ],
+                    temperature: 0.1,
+                    max_tokens: 10
+                }),
+                onload: async (response) => {
+                    try {
+                        const data = JSON.parse(response.responseText);
+                        
+                        // Kiểm tra lỗi từ API
+                        if (data.error) {
+                            const errorMsg = data.error.message;
+                            
+                            // Nếu bị rate limit và còn retry
+                            if (errorMsg.includes('RATE_LIMIT') || errorMsg.includes('quota')) {
+                                if (retryCount < MAX_RETRIES) {
+                                    const waitTime = RETRY_DELAY * (retryCount + 1);
+                                    console.warn(\`⏳ Rate limit! Đợi \${waitTime/1000}s rồi thử lại... (lần \${retryCount + 1}/\${MAX_RETRIES})\`);
+                                    await new Promise(r => setTimeout(r, waitTime));
+                                    
+                                    // Retry
+                                    try {
+                                        const result = await callGroqAPI(questionText, answers, retryCount + 1);
+                                        resolve(result);
+                                        return;
+                                    } catch (err) {
+                                        reject(err);
+                                        return;
+                                    }
+                                } else {
+                                    console.error('❌ Vượt quá số lần thử lại!');
+                                    reject('Rate limit - Vui lòng đợi vài phút');
+                                    return;
+                                }
+                            }
+                            
+                            console.error('❌ Groq API Error:', errorMsg);
+                            reject(\`API Error: \${errorMsg}\`);
+                            return;
+                        }
+                        
+                        // Kiểm tra có choices không
+                        if (!data.choices || data.choices.length === 0) {
+                            console.error('❌ No choices in response:', data);
+                            reject('API không trả về kết quả. Kiểm tra API Key!');
+                            return;
+                        }
+                        
+                        // Lấy câu trả lời
+                        const answer = data.choices[0].message.content.trim();
+                        const match = answer.match(/^[ABCD]/i);
+                        
+                        if (match) {
+                            resolve(match[0].toUpperCase());
+                        } else {
+                            console.warn('⚠️ AI trả lời không đúng format:', answer);
+                            reject('AI trả lời không đúng định dạng');
+                        }
+                    } catch (error) {
+                        console.error('❌ Parse error:', error);
+                        console.error('Response:', response.responseText);
+                        reject(\`Lỗi xử lý: \${error.message}\`);
+                    }
+                },
+                onerror: (error) => {
+                    console.error('❌ Request error:', error);
+                    reject('Lỗi kết nối API');
+                }
+            });
+        });
+    };
+
+    // ============================================
+    // PART 6: QUESTION PARSER
+    // ============================================
+    const parseQuestions = () => {
+        const questionElements = document.querySelectorAll('[id^="question_all_"]');
+        const questions = [];
+
+        questionElements.forEach((questionEl, index) => {
+            try {
+                const questionLabel = questionEl.querySelector('.question-standalone-label');
+                const questionNumber = questionLabel ? questionLabel.textContent.trim() : \`Câu \${index + 1}\`;
+
+                const questionContentDiv = questionEl.querySelector('.question-standalone-content-box');
+                const questionText = questionContentDiv 
+                    ? questionContentDiv.textContent.replace(/\\s+/g, ' ').trim()
+                    : '';
+
+                const answerDivs = questionEl.querySelectorAll('.item-answer');
+                const answers = {};
+
+                answerDivs.forEach(answerDiv => {
+                    const button = answerDiv.querySelector('button');
+                    const letter = button ? button.textContent.trim() : '';
+
+                    const answerContent = answerDiv.querySelector('.answer-content');
+                    const answerText = answerContent 
+                        ? answerContent.textContent.replace(/\\s+/g, ' ').trim()
+                        : '';
+
+                    if (letter && answerText) {
+                        answers[letter] = answerText;
+                    }
+                });
+
+                if (questionText && Object.keys(answers).length > 0) {
+                    questions.push({
+                        element: questionEl,
+                        number: questionNumber,
+                        text: questionText,
+                        answers: answers
+                    });
+                }
+            } catch (error) {
+                console.error(\`Error parsing question \${index + 1}:\`, error);
+            }
+        });
+
+        return questions;
+    };
+
+    // ============================================
+    // PART 7: ANSWER HIGHLIGHTER
+    // ============================================
+    const highlightAnswer = (questionElement, answerLetter) => {
+        const answerDivs = questionElement.querySelectorAll('.item-answer');
+        
+        answerDivs.forEach(answerDiv => {
+            const button = answerDiv.querySelector('button');
+            const letter = button ? button.textContent.trim() : '';
+            
+            if (letter === answerLetter) {
+                answerDiv.classList.add('ai-correct-answer');
+                
+                const questionLabel = questionElement.querySelector('.question-standalone-label');
+                if (questionLabel && !questionLabel.querySelector('.ai-answer-badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'ai-answer-badge';
+                    badge.textContent = \`AI: \${answerLetter}\`;
+                    questionLabel.appendChild(badge);
+                }
+            }
+        });
+    };
+
+    // ============================================
+    // PART 8: MAIN SOLVER
+    // ============================================
+    const solveAllQuestions = async (button) => {
+        if (!API_KEY) {
+            await showApiKeyModal();
+        }
+
+        const questions = parseQuestions();
+        
+        if (questions.length === 0) {
+            alert('Không tìm thấy câu hỏi!');
+            return;
+        }
+
+        button.classList.add('loading');
+        button.innerHTML = '🤖 Đang giải... <div class="ai-spinner"></div>';
+
+        console.log(\`📚 Bắt đầu giải \${questions.length} câu...\`);
+
+        for (let i = 0; i < questions.length; i++) {
+            const q = questions[i];
+            
+            try {
+                console.log(\`🔍 \${q.number}\`);
+                const answer = await callGroqAPI(q.text, q.answers);
+                console.log(\`✅ \${answer}\`);
+                highlightAnswer(q.element, answer);
+                
+                if (i < questions.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 3000)); // Đợi 3s tránh rate limit
+                }
+            } catch (error) {
+                console.error(\`❌ Lỗi \${q.number}:\`, error);
+            }
+        }
+
+        button.classList.remove('loading');
+        button.innerHTML = '✨ Giải xong!';
+        
+        setTimeout(() => {
+            button.innerHTML = '🤖 Giải tất cả câu hỏi';
+        }, 3000);
+
+        console.log('🎉 Hoàn thành!');
+    };
+
+    // ============================================
+    // PART 9: INIT AI SOLVER
+    // ============================================
+    const initAI = () => {
+        aiStyles();
+
+        const solveButton = document.createElement('button');
+        solveButton.className = 'ai-solve-btn';
+        solveButton.innerHTML = '🤖 Giải tất cả câu hỏi';
+        solveButton.onclick = () => solveAllQuestions(solveButton);
+        
+        document.body.appendChild(solveButton);
+        console.log('🎯 AzoSkibidi AI Solver sẵn sàng!');
+    };
+
+    // ============================================
+    // START
+    // ============================================
+    setTimeout(() => {
+        const questions = parseQuestions();
+        if (questions.length > 0) {
+            initAI();
+        }
+    }, 2000);
+
+    // Observer for exam detection
+    let debounceTimer = null;
+    observer = new MutationObserver(() => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(checkForExam, 300);
+    });
+    
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+})();`;
+
+            outputTextarea.value = script;
+            outputSection.classList.add('show');
+            successMessage.classList.add('show');
+
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        function copyScript() {
+            outputTextarea.select();
+            document.execCommand('copy');
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Đã copy!';
+            btn.style.background = 'linear-gradient(45deg, #10b981, #059669)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'linear-gradient(45deg, #9d4edd, #c77dff)';
+            }, 2000);
+        }
+
+        function installWithTampermonkey() {
+            const script = outputTextarea.value;
+            
+            if (!script) {
+                alert('Chưa có script để cài đặt!');
+                return;
+            }
+            
+            // Tạo blob URL với content type đúng
+            const blob = new Blob([script], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            
+            // Tạo tên file
+            const filename = `azoskibidi-${currentCustomKey}-${currentDomain.replace(/\./g, '-')}.user.js`;
+            
+            // Mở trong tab mới với hack để Tampermonkey nhận diện
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.target = '_blank';
+            
+            // Trigger download và mở - Tampermonkey sẽ intercept
+            document.body.appendChild(a);
+            a.click();
+            
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            // Hiển thị hướng dẫn
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Đang mở... Hãy chọn Install!';
+            btn.style.background = 'linear-gradient(45deg, #3b82f6, #2563eb)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'linear-gradient(45deg, #10b981, #059669)';
+            }, 3000);
+        }
+
+        function downloadScript() {
+
+            const script = outputTextarea.value;
+            const blob = new Blob([script], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `azoskibidi-${currentCustomKey}-${currentDomain.replace(/\./g, '-')}.user.js`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
