@@ -1,6 +1,6 @@
 # 🚀 AzoSkibidi - AI Study Assistant
 
-> **Phiên bản:** v1.0 Beta Test
+> **Phiên bản:** v1.1 Beta Test
 > **Trang chủ & Cài đặt:** [https://azoskibidi.vercel.app/](https://azoskibidi.vercel.app/)
 
 ## 🌟 Giới thiệu
