@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AzoSkibidi All-in-One
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Loading screen + Parse câu hỏi + AI Solver - Tất cả trong 1!
 // @author       AzoSkibidi Team
 // @match        https://*.azota.vn/*
@@ -1186,3 +1186,4 @@ BẮT ĐẦU TRẢ LỜI (CHỈ JSON):`;
     }, 2000);
 
 })();
+
