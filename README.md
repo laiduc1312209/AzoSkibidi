@@ -1,78 +1,438 @@
-# 🚀 AzoSkibidi Script Generator
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AzoSkibidi - AI Study Assistant</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --purple-dark: #1a0b2e;
+            --purple-light: #4c1d95;
+            --neon-green: #00ff9d;
+            --neon-green-dim: #059669;
+            --text-main: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
 
-> **"Giúp bạn quên mất cách dùng não"** 🧠❌
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-[![Visit Site](https://img.shields.io/badge/Visit-Website-9d4edd?style=for-the-badge&logo=google-chrome&logoColor=white)](https://laiduc1312209.github.io/AzoSkibidi/)
-[![Made with Love](https://img.shields.io/badge/Made%20with-💜-ff69b4?style=for-the-badge)](https://github.com/laiduc1312209)
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-## 🌟 Giới thiệu
+        /* Ambient Background Effect */
+        .ambient-light {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(76, 29, 149, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-**AzoSkibidi** là công cụ tạo UserScript tự động, giúp tích hợp trí tuệ nhân tạo (AI) vào quá trình làm bài tập trắc nghiệm online (đặc biệt tối ưu cho các nền tảng như Azota). Tool sử dụng sức mạnh của **Groq API (Llama 3)** để giải quyết các câu hỏi trong nháy mắt.
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-🔗 **Link sử dụng tool:** [https://laiduc1312209.github.io/AzoSkibidi/](https://laiduc1312209.github.io/AzoSkibidi/)
+        /* Header */
+        header {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
----
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #2dd4bf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
 
-## ✨ Tính năng chính (Features)
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 100px 0 60px;
+            position: relative;
+        }
 
-Script được tạo ra sẽ bao gồm các tính năng "Vippro" sau:
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
 
-* 🎨 **Custom Loading Screen:** Màn hình chờ cực nghệ với hiệu ứng gradient tím mộng mơ.
-* 🕵️ **Exam Detection:** Tự động phát hiện khi bạn vào màn hình làm bài thi.
-* 🤖 **AI Solver (Llama-3.3-70b):**
-    * Phân tích câu hỏi và đáp án tự động.
-    * Gửi request siêu tốc đến Groq API.
-    * Tự động retry nếu gặp Rate Limit.
-* 🎯 **Auto Highlight:** Tự động tô xanh đáp án đúng và gắn huy hiệu `AI: A/B/C/D`.
-* 🛡️ **Anti-Detection (Basic):** Script chạy ở mức `document-start` và giả lập hành vi người dùng cơ bản.
+        .hero h1 span {
+            color: var(--neon-green);
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+        }
 
----
+        .hero p {
+            font-size: 20px;
+            color: #94a3b8;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
 
-## 🛠️ Hướng dẫn sử dụng (How to use)
+        /* Install Button */
+        .btn-install {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--neon-green);
+            color: #022c22;
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px 48px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7);
+            animation: pulse-green 2s infinite;
+        }
 
-### Bước 1: Chuẩn bị
-1. Cài đặt tiện ích **Tampermonkey** trên trình duyệt (Chrome/Edge/Cốc Cốc).
-2. Lấy **Groq API Key** (Miễn phí & Cực nhanh) tại: [console.groq.com/keys](https://console.groq.com/keys).
+        .btn-install:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px -10px rgba(0, 255, 157, 0.6);
+            background: #34d399;
+        }
 
-### Bước 2: Tạo Script
-1. Truy cập trang web: [AzoSkibidi Generator](https://laiduc1312209.github.io/AzoSkibidi/).
-2. Nhập **Domain** trang web bạn muốn dùng (Ví dụ: `thpt-nguyentrai.azota.vn`).
-3. Nhập **Groq API Key** của bạn.
-4. Bấm **"✨ Tạo Script"**.
+        .btn-tampermonkey {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(167, 139, 250, 0.15);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px 40px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            margin-bottom: 24px;
+        }
 
-### Bước 3: Cài đặt & Quẩy
-1. Bấm nút **"🔧 Cài đặt với Tampermonkey"** (hoặc copy code và tạo script mới thủ công).
-2. Vào trang làm bài thi.
-3. Đợi nút **"🤖 Giải tất cả câu hỏi"** xuất hiện ở góc và bấm vào.
-4. Tận hưởng kết quả! 🎉
+        .btn-tampermonkey:hover {
+            background: rgba(167, 139, 250, 0.25);
+            transform: translateY(-2px);
+            border-color: rgba(167, 139, 250, 0.6);
+            color: #fff;
+        }
 
----
 
-## 📸 Screenshots
 
-*(Bạn có thể thêm ảnh chụp màn hình tool tại đây nếu muốn)*
+        /* Version Badge */
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            font-family: 'Consolas', monospace;
+        }
 
----
+        /* Demo Section */
+        .demo-section {
+            padding: 80px 0;
+            text-align: center;
+        }
 
-## ⚠️ Disclaimer (Cảnh báo)
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 900px;
+            margin: 40px auto 0;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+        }
 
-* Công cụ này được tạo ra với mục đích **nghiên cứu và học tập** về lập trình UserScript và tích hợp API.
-* Tác giả không chịu trách nhiệm nếu bạn sử dụng nó để gian lận trong các kỳ thi quan trọng hoặc bị khóa tài khoản.
-* Hãy sử dụng một cách có trách nhiệm! (Hoặc đừng để bị bắt 😉).
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
----
--Demo-
+        /* Alert Section */
+        .alert-box {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 40px auto;
+            max-width: 800px;
+            text-align: left;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-[![Xem Video Demo](https://img.youtube.com/vi/MFVYVOYqQPc/0.jpg)](https://www.youtube.com/watch?v=MFVYVOYqQPc)
+        .alert-icon {
+            font-size: 32px;
+            color: #f87171;
+        }
 
----
-## 👨‍💻 Credits
+        .alert-content h4 {
+            color: #fca5a5;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
 
-* **Author:** laiduc vippro (`pld_1312`)
-* **Tech Stack:** HTML5, CSS3 (Glassmorphism), JavaScript (Vanilla), Groq API.
+        .alert-content p {
+            color: #cbd5e1;
+            font-size: 15px;
+            margin: 0;
+        }
 
----
+        .note-list {
+            list-style: none;
+            margin-top: 10px;
+        }
 
-<div align="center">
-  Made with 💜 by AzoSkibidi Team
-</div>
+        .note-list li {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #94a3b8;
+        }
+
+        .note-list li i {
+            color: #fbbf24;
+            font-size: 14px;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 80px 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 32px;
+            border-radius: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(167, 139, 250, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(167, 139, 250, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #a78bfa;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .feature-card p {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            color: #64748b;
+            font-size: 14px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+
+        .heart {
+            color: #a78bfa;
+            display: inline-block;
+            animation: beat 1.5s infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 255, 157, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0); }
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.2)); }
+            to { filter: drop-shadow(0 0 15px rgba(45, 212, 191, 0.4)); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 42px; }
+            .hero p { font-size: 18px; padding: 0 20px; }
+            .features { grid-template-columns: 1fr; padding: 40px 20px; }
+            .btn-install { width: 100%; justify-content: center; }
+            .btn-tampermonkey { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-light"></div>
+
+    <div class="container">
+        <header>
+            <a href="#" class="logo">AzoSkibidi</a>
+            <div class="socials">
+                <a href="https://github.com/laiduc1312209/AzoSkibidi" target="_blank" style="color: #94a3b8; font-size: 24px; text-decoration: none; transition: color 0.3s;">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="version-badge"><i class="fas fa-code-branch"></i> v1.0 Beta Test</div>
+            <h1>Công cụ học tập<br><span>AI All-in-One</span> đỉnh cao</h1>
+            <p>Tự động hóa bài tập, nhận diện đề thi thông minh và hỗ trợ giải bài tập tốc độ ánh sáng với Groq AI.</p>
+            
+            <a href="https://www.tampermonkey.net/" target="_blank" class="btn-tampermonkey">
+                <i class="fas fa-puzzle-piece"></i>
+                Cài đặt Extension (Tampermonkey)
+            </a>
+
+            <div style="height: 16px;"></div>
+
+            <a href="https://github.com/laiduc1312209/AzoSkibidi/raw/refs/heads/main/azoskibidi-all-in-one.user.js" class="btn-install">
+                <i class="fas fa-download"></i>
+                Cài đặt/Cập nhật Script ngay
+            </a>
+            
+            <div style="margin-top: 20px; font-size: 14px; color: #64748b;">
+                <i class="fas fa-info-circle"></i> Yêu cầu đã cài đặt Tampermonkey hoặc Violetmonkey
+            </div>
+        </section>
+
+        </section>
+
+        <div class="alert-box">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-content">
+                <h4>Lưu ý Quan Trọng</h4>
+                <p>Công cụ này chỉ hỗ trợ học tập. Việc sử dụng trong thi cử có thể vi phạm quy chế.</p>
+                <ul class="note-list">
+                    <li><i class="fas fa-key"></i> Yêu cầu <strong style="color: #e2e8f0;">Groq API Key</strong> (miễn phí) để dùng tính năng AI Solver.</li>
+                    <li><i class="fas fa-shield-alt"></i> Script an toàn, không chứa mã độc, open-source 100%.</li>
+                    <li><i class="fas fa-magic"></i> AI giải bài không chính xác 100%, hãy check kỹ lại.</li>
+                    <li><i class="fas fa-image"></i> Các câu hỏi hình ảnh sẽ không nhận diện được.</li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="demo-section">
+            <h2 style="font-size: 36px; font-family: 'Outfit'; margin-bottom: 10px;">Xem Demo Hướng Dẫn</h2>
+            <p style="color: #94a3b8;">Cách cài đặt và sử dụng full tính năng trong 3 phút</p>
+            
+            <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=Placeholder" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Solver Tốc Độ Cao</h3>
+                <p>Nằm chơi cũng xong bài! Hệ thống tự động phân tích và giải đáp án chính xác trong tích tắc.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Nhận Diện Thông Minh</h3>
+                <p>Tự động phát hiện khi bạn vào trang thi, kích hoạt các công cụ hỗ trợ cần thiết ngay lập tức.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>Giao Diện Skibidi</h3>
+                <p>Màn hình chờ cực chất, trải nghiệm người dùng mượt mà và giao diện Dark Mode bảo vệ mắt.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Made with <span class="heart">💜</span> by <strong>laiduc1312209</strong></p>
+            <p style="margin-top: 10px; opacity: 0.6;">© 2024 AzoSkibidi Project. All rights reserved.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
