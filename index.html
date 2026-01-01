@@ -3,9 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AzoSkibidi Script Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>AzoSkibidi - AI Study Assistant</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --primary-bg: #0f172a;
+            --purple-dark: #1a0b2e;
+            --purple-light: #4c1d95;
+            --neon-green: #00ff9d;
+            --neon-green-dim: #059669;
+            --text-main: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,788 +29,410 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 50%, #1a0033 100%);
+            background-color: var(--primary-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Background Effect */
+        .ambient-light {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(76, 29, 149, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
-            background: rgba(45, 27, 78, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 700px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(157, 78, 221, 0.3);
-            border: 1px solid rgba(192, 132, 252, 0.2);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
+        /* Header */
+        header {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        h1 {
-            font-size: 42px;
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(45deg, #b794f6, #e879f9, #c084fc);
-            background-clip: text;
+            background: linear-gradient(135deg, #a78bfa, #2dd4bf);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite;
+            text-decoration: none;
+            animation: glow 3s ease-in-out infinite alternate;
         }
 
-        .subtitle {
-            color: #d8b4fe;
-            font-size: 16px;
-            opacity: 0.9;
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 100px 0 60px;
+            position: relative;
         }
 
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(183, 148, 246, 0.5)); }
-            50% { filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.8)); }
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
         }
 
-        .form-group {
-            margin-bottom: 25px;
+        .hero h1 span {
+            color: var(--neon-green);
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
         }
 
-        label {
-            display: block;
-            color: #d8b4fe;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 14px;
+        .hero p {
+            font-size: 20px;
+            color: #94a3b8;
+            max-width: 600px;
+            margin-bottom: 48px;
         }
 
-        input, textarea {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(26, 0, 51, 0.5);
-            border: 2px solid rgba(192, 132, 252, 0.3);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #c084fc;
-            box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.1);
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: rgba(216, 180, 254, 0.4);
-        }
-
-        .input-hint {
-            color: rgba(216, 180, 254, 0.6);
-            font-size: 12px;
-            margin-top: 6px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(45deg, #9d4edd, #c77dff);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(157, 78, 221, 0.5);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
+        /* Install Button */
         .btn-install {
-            background: linear-gradient(45deg, #10b981, #059669);
-            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--neon-green);
+            color: #022c22;
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px 48px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7);
+            animation: pulse-green 2s infinite;
         }
 
         .btn-install:hover {
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px -10px rgba(0, 255, 157, 0.6);
+            background: #34d399;
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(192, 132, 252, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .output-section {
-            margin-top: 30px;
-            display: none;
-        }
-
-        .output-section.show {
-            display: block;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        textarea {
-            min-height: 400px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            resize: vertical;
-        }
-
-        .success-message {
-            background: rgba(16, 185, 129, 0.2);
-            border: 2px solid #10b981;
-            color: #6ee7b7;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            text-align: center;
+        .btn-tampermonkey {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(167, 139, 250, 0.15);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
             font-weight: 600;
-            display: none;
+            padding: 14px 40px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            margin-bottom: 24px;
         }
 
-        .success-message.show {
-            display: block;
-            animation: pulse 0.5s;
+        .btn-tampermonkey:hover {
+            background: rgba(167, 139, 250, 0.25);
+            transform: translateY(-2px);
+            border-color: rgba(167, 139, 250, 0.6);
+            color: #fff;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+
+
+        /* Version Badge */
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            font-family: 'Consolas', monospace;
         }
 
-        .footer {
+        /* Demo Section */
+        .demo-section {
+            padding: 80px 0;
             text-align: center;
-            margin-top: 30px;
-            color: rgba(216, 180, 254, 0.5);
-            font-size: 13px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 900px;
+            margin: 40px auto 0;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Alert Section */
+        .alert-box {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 40px auto;
+            max-width: 800px;
+            text-align: left;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .alert-icon {
+            font-size: 32px;
+            color: #f87171;
+        }
+
+        .alert-content h4 {
+            color: #fca5a5;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .alert-content p {
+            color: #cbd5e1;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        .note-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .note-list li {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #94a3b8;
+        }
+
+        .note-list li i {
+            color: #fbbf24;
+            font-size: 14px;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 80px 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 32px;
+            border-radius: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(167, 139, 250, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(167, 139, 250, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #a78bfa;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .feature-card p {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            color: #64748b;
+            font-size: 14px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+
+        .heart {
+            color: #a78bfa;
+            display: inline-block;
+            animation: beat 1.5s infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 255, 157, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0); }
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.2)); }
+            to { filter: drop-shadow(0 0 15px rgba(45, 212, 191, 0.4)); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 42px; }
+            .hero p { font-size: 18px; padding: 0 20px; }
+            .features { grid-template-columns: 1fr; padding: 40px 20px; }
+            .btn-install { width: 100%; justify-content: center; }
+            .btn-tampermonkey { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
+
+    <div class="ambient-light"></div>
+
     <div class="container">
-        <div class="header">
-            <h1>🚀 AzoSkibidi Script Generator</h1>
-            <p class="subtitle">Giúp bạn quên mất cách dùng não</p>
+        <header>
+            <a href="#" class="logo">AzoSkibidi</a>
+            <div class="socials">
+                <a href="https://github.com/laiduc1312209/AzoSkibidi" target="_blank" style="color: #94a3b8; font-size: 24px; text-decoration: none; transition: color 0.3s;">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="version-badge"><i class="fas fa-code-branch"></i> v1.0 Beta Test</div>
+            <h1>Công cụ học tập<br><span>AI All-in-One</span> đỉnh cao</h1>
+            <p>Tự động hóa bài tập, nhận diện đề thi thông minh và hỗ trợ giải bài tập tốc độ ánh sáng với Groq AI.</p>
+            
+            <a href="https://www.tampermonkey.net/" target="_blank" class="btn-tampermonkey">
+                <i class="fas fa-puzzle-piece"></i>
+                Cài đặt Extension (Tampermonkey)
+            </a>
+
+            <div style="height: 16px;"></div>
+
+            <a href="https://github.com/laiduc1312209/AzoSkibidi/raw/refs/heads/main/azoskibidi-all-in-one.user.js" class="btn-install">
+                <i class="fas fa-download"></i>
+                Cài đặt/Cập nhật Script ngay
+            </a>
+            
+            <div style="margin-top: 20px; font-size: 14px; color: #64748b;">
+                <i class="fas fa-info-circle"></i> Yêu cầu đã cài đặt Tampermonkey hoặc Violetmonkey
+            </div>
+        </section>
+
+        </section>
+
+        <div class="alert-box">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-content">
+                <h4>Lưu ý Quan Trọng</h4>
+                <p>Công cụ này chỉ hỗ trợ học tập. Việc sử dụng trong thi cử có thể vi phạm quy chế.</p>
+                <ul class="note-list">
+                    <li><i class="fas fa-key"></i> Yêu cầu <strong style="color: #e2e8f0;">Groq API Key</strong> (miễn phí) để dùng tính năng AI Solver.</li>
+                    <li><i class="fas fa-shield-alt"></i> Script an toàn, không chứa mã độc, open-source 100%.</li>
+                    <li><i class="fas fa-magic"></i> AI giải bài không chính xác 100%, hãy check kỹ lại.</li>
+                    <li><i class="fas fa-image"></i> Các câu hỏi hình ảnh sẽ không nhận diện được.</li>
+                </ul>
+            </div>
         </div>
 
-        <form id="generatorForm">
-            <div class="form-group">
-                <label for="domain">🌐 Tên miền</label>
-                <input type="text" id="domain" placeholder="vd: example.azota.vn" required>
-                <p class="input-hint">Nhập domain mà bạn muốn script hoạt động (không cần https://)</p>
+        <section class="demo-section">
+            <h2 style="font-size: 36px; font-family: 'Outfit'; margin-bottom: 10px;">Xem Demo Hướng Dẫn</h2>
+            <p style="color: #94a3b8;">Cách cài đặt và sử dụng full tính năng trong 3 phút</p>
+            
+            <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=Placeholder" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Solver Tốc Độ Cao</h3>
+                <p>Nằm chơi cũng xong bài! Hệ thống tự động phân tích và giải đáp án chính xác trong tích tắc.</p>
             </div>
 
-            <div class="form-group">
-                <label for="groqKey">🔑 Groq API Key</label>
-                <input type="password" id="groqKey" placeholder="gsk_..." required>
-                <p class="input-hint">Lấy miễn phí tại: <a href="https://console.groq.com/keys" target="_blank" style="color: #c084fc;">console.groq.com/keys</a></p>
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Nhận Diện Thông Minh</h3>
+                <p>Tự động phát hiện khi bạn vào trang thi, kích hoạt các công cụ hỗ trợ cần thiết ngay lập tức.</p>
             </div>
 
-            <button type="submit" class="btn">✨ Tạo Script</button>
-        </form>
-
-        <div class="output-section" id="outputSection">
-            <div class="success-message" id="successMessage">
-                ✅ Script đã được tạo thành công!
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>Giao Diện Skibidi</h3>
+                <p>Màn hình chờ cực chất, trải nghiệm người dùng mượt mà và giao diện Dark Mode bảo vệ mắt.</p>
             </div>
+        </section>
 
-            <div class="form-group">
-                <label for="output">📝 Tampermonkey Script</label>
-                <textarea id="output" readonly></textarea>
-            </div>
-
-            <button class="btn btn-install" onclick="installWithTampermonkey()">🔧 Cài đặt với Tampermonkey</button>
-            <button class="btn" onclick="copyScript()">📋 Copy Script</button>
-            <button class="btn btn-secondary" onclick="downloadScript()">💾 Tải xuống (.user.js)</button>
-        </div>
-
-        <div class="footer">
-            Made with 💜 by laiduc vippro
-        </div>
+        <footer>
+            <p>Made with <span class="heart">💜</span> by <strong>laiduc1312209</strong></p>
+            <p style="margin-top: 10px; opacity: 0.6;">© 2024 AzoSkibidi Project. All rights reserved.</p>
+        </footer>
     </div>
 
-    <script>
-        const form = document.getElementById('generatorForm');
-        const outputSection = document.getElementById('outputSection');
-        const outputTextarea = document.getElementById('output');
-        const successMessage = document.getElementById('successMessage');
-
-        let currentDomain = '';
-        let currentCustomKey = '';
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            generateScript();
-        });
-
-        function generateScript() {
-            const domain = document.getElementById('domain').value.trim();
-            const groqKey = document.getElementById('groqKey').value.trim();
-            const customKey = 'pld_1312'; // Cố định
-
-            currentDomain = domain;
-            currentCustomKey = customKey;
-
-            const script = `// ==UserScript==
-// @name         AzoSkibidi All-in-One (${customKey})
-// @namespace    http://tampermonkey.net/
-// @version      3.0
-// @description  Loading screen + Parse câu hỏi + AI Solver - Tất cả trong 1!
-// @author       AzoSkibidi Team
-// @match        https://${domain}/*
-// @match        http://${domain}/*
-// @match        file:///*
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @grant        GM_xmlhttpRequest
-// @connect      api.groq.com
-// @run-at       document-start
-// ==/UserScript==
-
-(function() {
-    'use strict';
-
-    // ============================================
-    // CONFIG
-    // ============================================
-    const GROQ_API_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
-    // 🔑 Custom Key: ${customKey}
-    let API_KEY = GM_getValue('groq_api_key', '${groqKey}');
-    let examDetected = false;
-    let observer = null;
-
-    // ============================================
-    // PART 1: LOADING SCREEN
-    // ============================================
-    const loadingStyle = document.createElement('style');
-    loadingStyle.textContent = \`
-        #azoskibidi-loading {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 50%, #1a0033 100%);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 999999; font-family: 'Segoe UI', sans-serif; animation: fadeIn 0.5s;
-        }
-        .loading-title {
-            font-size: 48px; font-weight: 700;
-            background: linear-gradient(45deg, #b794f6, #e879f9, #c084fc);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 20px; animation: glow 2s ease-in-out infinite;
-        }
-        .loading-subtitle { font-size: 24px; color: #d8b4fe; margin-bottom: 40px; animation: pulse 2s ease-in-out infinite; }
-        .spinner {
-            width: 60px; height: 60px; border: 5px solid rgba(192, 132, 252, 0.2);
-            border-top: 5px solid #c084fc; border-radius: 50%; animation: spin 1s linear infinite;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes glow { 0%, 100% { filter: drop-shadow(0 0 10px rgba(183, 148, 246, 0.5)); } 50% { filter: drop-shadow(0 0 20px rgba(232, 121, 249, 0.8)); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .fade-out { animation: fadeOut 0.5s forwards; }
-    \`;
-    document.documentElement.appendChild(loadingStyle);
-
-    const loadingScreen = document.createElement('div');
-    loadingScreen.id = 'azoskibidi-loading';
-    loadingScreen.innerHTML = \`
-        <div class="loading-title">AzoSkibidi</div>
-        <div class="loading-subtitle">Vibe coding by ${customKey}</div>
-        <div class="spinner"></div>
-    \`;
-    document.documentElement.appendChild(loadingScreen);
-
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            loadingScreen.classList.add('fade-out');
-            setTimeout(() => {
-                loadingScreen.remove();
-                loadingStyle.remove();
-                checkForExam();
-            }, 500);
-        }, 1000);
-    });
-
-    // ============================================
-    // PART 2: EXAM DETECTION
-    // ============================================
-    function checkForExam() {
-        if (examDetected) return false;
-        
-        const examButton = document.querySelector('button.btn.btn-pending');
-        if (examButton && examButton.textContent.includes('Bắt đầu thi')) {
-            examDetected = true;
-            if (observer) observer.disconnect();
-            
-            showNotification('✅ Đã nhận diện được đề thi!');
-            console.log('✅ Đã nhận diện được đề thi!');
-            return true;
-        }
-        return false;
-    }
-
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.style.cssText = \`
-            position: fixed; top: 20px; right: 20px;
-            background: linear-gradient(135deg, #7c3aed, #a855f7);
-            color: white; padding: 16px 24px; border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
-            z-index: 999998; font-size: 16px; font-weight: 600;
-            animation: slideIn 0.5s; display: flex; gap: 10px;
-        \`;
-        notification.innerHTML = \`<span style="font-size: 24px;">✅</span><span>\${message}</span>\`;
-        
-        const style = document.createElement('style');
-        style.textContent = \`@keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }\`;
-        document.head.appendChild(style);
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.5s';
-            setTimeout(() => {
-                notification.remove();
-                style.remove();
-            }, 500);
-        }, 5000);
-    }
-
-    // ============================================
-    // PART 3: AI SOLVER STYLES
-    // ============================================
-    const aiStyles = () => {
-        const style = document.createElement('style');
-        style.textContent = \`
-            .ai-solver-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a0033, #2d1b4e, #1a0033); padding: 30px; border-radius: 15px; box-shadow: 0 8px 32px rgba(157, 78, 221, 0.4); z-index: 999999; min-width: 400px; color: #fff; }
-            .ai-solver-modal h2 { color: #9d4edd; margin-bottom: 20px; font-size: 24px; }
-            .ai-solver-modal input { width: 100%; padding: 12px; border: 2px solid #9d4edd; background: rgba(255,255,255,0.1); color: #fff; border-radius: 8px; margin-bottom: 15px; }
-            .ai-solver-modal button { width: 100%; padding: 12px; background: linear-gradient(45deg, #9d4edd, #c77dff); border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-            .ai-solver-modal button:hover { transform: scale(1.05); }
-            .ai-solver-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999998; }
-            .ai-solve-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #9d4edd, #c77dff); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); z-index: 999997; transition: all 0.3s; }
-            .ai-solve-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6); }
-            .ai-solve-btn.loading { opacity: 0.7; cursor: wait; }
-            .ai-answer-badge { display: inline-block; background: linear-gradient(45deg, #10b981, #059669); color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-left: 10px; font-size: 14px; animation: fadeInScale 0.5s; }
-            @keyframes fadeInScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-            .ai-correct-answer { background: rgba(16, 185, 129, 0.2) !important; border: 2px solid #10b981 !important; animation: pulse 1s; }
-            @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
-            .ai-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 10px; }
-        \`;
-        document.head.appendChild(style);
-    };
-
-    // ============================================
-    // PART 4: API KEY MANAGEMENT
-    // ============================================
-    const showApiKeyModal = () => {
-        return new Promise((resolve) => {
-            const overlay = document.createElement('div');
-            overlay.className = 'ai-solver-overlay';
-            
-            const modal = document.createElement('div');
-            modal.className = 'ai-solver-modal';
-            modal.innerHTML = \`
-                <h2>🤖 AzoSkibidi AI Solver</h2>
-                <p style="margin-bottom: 15px; color: #ddd;">Nhập Groq API Key:</p>
-                <input type="password" id="groq-api-input" placeholder="Nhập Groq API Key..." value="\${API_KEY}" />
-                <p style="font-size: 12px; color: #999; margin-bottom: 15px;">Lấy miễn phí: <a href="https://console.groq.com/keys" target="_blank" style="color: #9d4edd;">Groq Console</a></p>
-                <button id="save-api-key">Lưu & Bắt đầu</button>
-            \`;
-            
-            document.body.appendChild(overlay);
-            document.body.appendChild(modal);
-            
-            const input = modal.querySelector('#groq-api-input');
-            const saveBtn = modal.querySelector('#save-api-key');
-            
-            saveBtn.onclick = () => {
-                const key = input.value.trim();
-                if (key) {
-                    API_KEY = key;
-                    GM_setValue('groq_api_key', key);
-                    overlay.remove();
-                    modal.remove();
-                    resolve(key);
-                } else {
-                    alert('Vui lòng nhập API Key!');
-                }
-            };
-            
-            input.focus();
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') saveBtn.click();
-            });
-        });
-    };
-
-    // ============================================
-    // PART 5: GROQ API CALL (WITH RETRY)
-    // ============================================
-    const callGroqAPI = async (questionText, answers, retryCount = 0) => {
-        const MAX_RETRIES = 3;
-        const RETRY_DELAY = 5000; // 5 giây
-        
-        const prompt = \`Bạn là trợ lý AI giải trắc nghiệm.
-
-Câu hỏi: \${questionText}
-
-Đáp án:
-\${Object.entries(answers).map(([letter, text]) => \`\${letter}. \${text}\`).join('\\n')}
-
-Chọn đáp án đúng. CHỈ trả lời 1 chữ cái (A, B, C hoặc D), KHÔNG giải thích.\`;
-
-        return new Promise((resolve, reject) => {
-            GM_xmlhttpRequest({
-                method: 'POST',
-                url: GROQ_API_ENDPOINT,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': \`Bearer \${API_KEY}\`
-                },
-                data: JSON.stringify({
-                    model: 'llama-3.3-70b-versatile',
-                    messages: [
-                        { role: 'user', content: prompt }
-                    ],
-                    temperature: 0.1,
-                    max_tokens: 10
-                }),
-                onload: async (response) => {
-                    try {
-                        const data = JSON.parse(response.responseText);
-                        
-                        // Kiểm tra lỗi từ API
-                        if (data.error) {
-                            const errorMsg = data.error.message;
-                            
-                            // Nếu bị rate limit và còn retry
-                            if (errorMsg.includes('RATE_LIMIT') || errorMsg.includes('quota')) {
-                                if (retryCount < MAX_RETRIES) {
-                                    const waitTime = RETRY_DELAY * (retryCount + 1);
-                                    console.warn(\`⏳ Rate limit! Đợi \${waitTime/1000}s rồi thử lại... (lần \${retryCount + 1}/\${MAX_RETRIES})\`);
-                                    await new Promise(r => setTimeout(r, waitTime));
-                                    
-                                    // Retry
-                                    try {
-                                        const result = await callGroqAPI(questionText, answers, retryCount + 1);
-                                        resolve(result);
-                                        return;
-                                    } catch (err) {
-                                        reject(err);
-                                        return;
-                                    }
-                                } else {
-                                    console.error('❌ Vượt quá số lần thử lại!');
-                                    reject('Rate limit - Vui lòng đợi vài phút');
-                                    return;
-                                }
-                            }
-                            
-                            console.error('❌ Groq API Error:', errorMsg);
-                            reject(\`API Error: \${errorMsg}\`);
-                            return;
-                        }
-                        
-                        // Kiểm tra có choices không
-                        if (!data.choices || data.choices.length === 0) {
-                            console.error('❌ No choices in response:', data);
-                            reject('API không trả về kết quả. Kiểm tra API Key!');
-                            return;
-                        }
-                        
-                        // Lấy câu trả lời
-                        const answer = data.choices[0].message.content.trim();
-                        const match = answer.match(/^[ABCD]/i);
-                        
-                        if (match) {
-                            resolve(match[0].toUpperCase());
-                        } else {
-                            console.warn('⚠️ AI trả lời không đúng format:', answer);
-                            reject('AI trả lời không đúng định dạng');
-                        }
-                    } catch (error) {
-                        console.error('❌ Parse error:', error);
-                        console.error('Response:', response.responseText);
-                        reject(\`Lỗi xử lý: \${error.message}\`);
-                    }
-                },
-                onerror: (error) => {
-                    console.error('❌ Request error:', error);
-                    reject('Lỗi kết nối API');
-                }
-            });
-        });
-    };
-
-    // ============================================
-    // PART 6: QUESTION PARSER
-    // ============================================
-    const parseQuestions = () => {
-        const questionElements = document.querySelectorAll('[id^="question_all_"]');
-        const questions = [];
-
-        questionElements.forEach((questionEl, index) => {
-            try {
-                const questionLabel = questionEl.querySelector('.question-standalone-label');
-                const questionNumber = questionLabel ? questionLabel.textContent.trim() : \`Câu \${index + 1}\`;
-
-                const questionContentDiv = questionEl.querySelector('.question-standalone-content-box');
-                const questionText = questionContentDiv 
-                    ? questionContentDiv.textContent.replace(/\\s+/g, ' ').trim()
-                    : '';
-
-                const answerDivs = questionEl.querySelectorAll('.item-answer');
-                const answers = {};
-
-                answerDivs.forEach(answerDiv => {
-                    const button = answerDiv.querySelector('button');
-                    const letter = button ? button.textContent.trim() : '';
-
-                    const answerContent = answerDiv.querySelector('.answer-content');
-                    const answerText = answerContent 
-                        ? answerContent.textContent.replace(/\\s+/g, ' ').trim()
-                        : '';
-
-                    if (letter && answerText) {
-                        answers[letter] = answerText;
-                    }
-                });
-
-                if (questionText && Object.keys(answers).length > 0) {
-                    questions.push({
-                        element: questionEl,
-                        number: questionNumber,
-                        text: questionText,
-                        answers: answers
-                    });
-                }
-            } catch (error) {
-                console.error(\`Error parsing question \${index + 1}:\`, error);
-            }
-        });
-
-        return questions;
-    };
-
-    // ============================================
-    // PART 7: ANSWER HIGHLIGHTER
-    // ============================================
-    const highlightAnswer = (questionElement, answerLetter) => {
-        const answerDivs = questionElement.querySelectorAll('.item-answer');
-        
-        answerDivs.forEach(answerDiv => {
-            const button = answerDiv.querySelector('button');
-            const letter = button ? button.textContent.trim() : '';
-            
-            if (letter === answerLetter) {
-                answerDiv.classList.add('ai-correct-answer');
-                
-                const questionLabel = questionElement.querySelector('.question-standalone-label');
-                if (questionLabel && !questionLabel.querySelector('.ai-answer-badge')) {
-                    const badge = document.createElement('span');
-                    badge.className = 'ai-answer-badge';
-                    badge.textContent = \`AI: \${answerLetter}\`;
-                    questionLabel.appendChild(badge);
-                }
-            }
-        });
-    };
-
-    // ============================================
-    // PART 8: MAIN SOLVER
-    // ============================================
-    const solveAllQuestions = async (button) => {
-        if (!API_KEY) {
-            await showApiKeyModal();
-        }
-
-        const questions = parseQuestions();
-        
-        if (questions.length === 0) {
-            alert('Không tìm thấy câu hỏi!');
-            return;
-        }
-
-        button.classList.add('loading');
-        button.innerHTML = '🤖 Đang giải... <div class="ai-spinner"></div>';
-
-        console.log(\`📚 Bắt đầu giải \${questions.length} câu...\`);
-
-        for (let i = 0; i < questions.length; i++) {
-            const q = questions[i];
-            
-            try {
-                console.log(\`🔍 \${q.number}\`);
-                const answer = await callGroqAPI(q.text, q.answers);
-                console.log(\`✅ \${answer}\`);
-                highlightAnswer(q.element, answer);
-                
-                if (i < questions.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 3000)); // Đợi 3s tránh rate limit
-                }
-            } catch (error) {
-                console.error(\`❌ Lỗi \${q.number}:\`, error);
-            }
-        }
-
-        button.classList.remove('loading');
-        button.innerHTML = '✨ Giải xong!';
-        
-        setTimeout(() => {
-            button.innerHTML = '🤖 Giải tất cả câu hỏi';
-        }, 3000);
-
-        console.log('🎉 Hoàn thành!');
-    };
-
-    // ============================================
-    // PART 9: INIT AI SOLVER
-    // ============================================
-    const initAI = () => {
-        aiStyles();
-
-        const solveButton = document.createElement('button');
-        solveButton.className = 'ai-solve-btn';
-        solveButton.innerHTML = '🤖 Giải tất cả câu hỏi';
-        solveButton.onclick = () => solveAllQuestions(solveButton);
-        
-        document.body.appendChild(solveButton);
-        console.log('🎯 AzoSkibidi AI Solver sẵn sàng!');
-    };
-
-    // ============================================
-    // START
-    // ============================================
-    setTimeout(() => {
-        const questions = parseQuestions();
-        if (questions.length > 0) {
-            initAI();
-        }
-    }, 2000);
-
-    // Observer for exam detection
-    let debounceTimer = null;
-    observer = new MutationObserver(() => {
-        if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(checkForExam, 300);
-    });
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-})();`;
-
-            outputTextarea.value = script;
-            outputSection.classList.add('show');
-            successMessage.classList.add('show');
-
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 3000);
-        }
-
-        function copyScript() {
-            outputTextarea.select();
-            document.execCommand('copy');
-            
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Đã copy!';
-            btn.style.background = 'linear-gradient(45deg, #10b981, #059669)';
-            
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = 'linear-gradient(45deg, #9d4edd, #c77dff)';
-            }, 2000);
-        }
-
-        function installWithTampermonkey() {
-            const script = outputTextarea.value;
-            
-            if (!script) {
-                alert('Chưa có script để cài đặt!');
-                return;
-            }
-            
-            // Tạo blob URL với content type đúng
-            const blob = new Blob([script], { type: 'text/javascript' });
-            const url = URL.createObjectURL(blob);
-            
-            // Tạo tên file
-            const filename = `azoskibidi-${currentCustomKey}-${currentDomain.replace(/\./g, '-')}.user.js`;
-            
-            // Mở trong tab mới với hack để Tampermonkey nhận diện
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.target = '_blank';
-            
-            // Trigger download và mở - Tampermonkey sẽ intercept
-            document.body.appendChild(a);
-            a.click();
-            
-            // Cleanup
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 100);
-            
-            // Hiển thị hướng dẫn
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Đang mở... Hãy chọn Install!';
-            btn.style.background = 'linear-gradient(45deg, #3b82f6, #2563eb)';
-            
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = 'linear-gradient(45deg, #10b981, #059669)';
-            }, 3000);
-        }
-
-        function downloadScript() {
-
-            const script = outputTextarea.value;
-            const blob = new Blob([script], { type: 'text/javascript' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `azoskibidi-${currentCustomKey}-${currentDomain.replace(/\./g, '-')}.user.js`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-    </script>
 </body>
 </html>
