@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         AzoSkibidi All-in-One
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      1.0
 // @description  Loading screen + Parse câu hỏi + AI Solver - Tất cả trong 1!
 // @author       AzoSkibidi Team
 // @match        https://*.azota.vn/*
 // @match        http://*.azota.vn/*
 // @match        file:///*
+// @updateURL    https://github.com/laiduc1312209/AzoSkibidi/raw/refs/heads/main/azoskibidi-all-in-one.user.js
+// @downloadURL  https://github.com/laiduc1312209/AzoSkibidi/raw/refs/heads/main/azoskibidi-all-in-one.user.js
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
