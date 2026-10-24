@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "project": "Azoskibidi",
+  "platform": "Azota",
+  "description": "Cấu trúc DOM, Selectors và Code snippets mẫu để AI Agent thao tác với tốc độ tối đa không cần quét lại trang.",
+  "pages": {
+    "login": {
+      "url_pattern": "/vi/auth/login",
+      "selectors": {
+        "username_input": "input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']",
+        "password_input": "input[type='password']",
+        "submit_button": "button:has-text('Đăng nhập')"
+      },
+      "fast_script_login": "(username, password) => {\n  const userEl = document.querySelector(\"input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']\");\n  const passEl = document.querySelector(\"input[type='password']\");\n  const submitBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Đăng nhập'));\n  if (userEl && passEl) {\n    userEl.value = username;\n    userEl.dispatchEvent(new Event('input', { bubbles: true }));\n    passEl.value = password;\n    passEl.dispatchEvent(new Event('input', { bubbles: true }));\n    if (submitBtn) submitBtn.click();\n    return true;\n  }\n  return false;\n}"
+    },
+    "classroom_exams": {
+      "url_pattern": "/vi/student/classroom-details/:classId/1",
+      "selectors": {
+        "view_more_pending": "button:has-text('Xem thêm')",
+        "exam_list_item": "a[href*='/vi/de-thi/']",
+        "exam_title": "p",
+        "exam_status": ".text-slate-400, span, div",
+        "badge_uncompleted": "text='Chưa thi'"
+      },
+      "fast_script_get_uncompleted_exams": "() => {\n  // Expand list first\n  const viewMoreBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Xem thêm');\n  if (viewMoreBtn) viewMoreBtn.click();\n  \n  const examLinks = Array.from(document.querySelectorAll(\"a[href*='/vi/de-thi/']\"));\n  const uncompleted = [];\n  \n  examLinks.forEach(link => {\n    const text = link.innerText;\n    if (text.includes('Chưa thi')) {\n      const lines = text.split('\\n').map(s => s.trim()).filter(Boolean);\n      const href = link.getAttribute('href');\n      const title = lines[0] || 'Đề thi';\n      const timeLimit = lines.find(l => l.includes('Thời gian') || l.includes('Thi trước')) || 'Không thời hạn';\n      uncompleted.push({ title, timeLimit, href, fullUrl: window.location.origin + href });\n    }\n  });\n  return uncompleted;\n}"
+    },
+    "exam_entry": {
+      "url_pattern": "/vi/de-thi/:examHash",
+      "selectors": {
+        "start_button": "button:has-text('Bắt đầu thi')",
+        "history_button": "button:has-text('Xem lịch sử làm bài')",
+        "exam_info_cards": ".exam-info-item, p"
+      },
+      "fast_script_start": "() => {\n  const btn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Bắt đầu thi');\n  if (btn) { btn.click(); return true; }\n  return false;\n}"
+    },
+    "take_test": {
+      "url_pattern": "/vi/test/take-test/:sessionId/:attempt/:examHash",
+      "selectors": {
+        "timer": ".timer-container, [class*='timer']",
+        "submit_button": "button:has-text('Nộp bài')",
+        "drawer_menu_button": "button[azt-track-service*='take-test']",
+        "drawer_grid_button": "button:has(svg.lucide-layout-grid), button:has(svg.lucide-grid-2x2)",
+        "selected_answer": ".selected-answer, .border-selected-answer"
+      },
+      "dom_rules": {
+        "part_1_multiple_choice": {
+          "description": "Các nút chọn phương án A, B, C, D là các thẻ <button> có text chính xác là A, B, C, D.",
+          "button_filter": "['A', 'B', 'C', 'D'].includes(b.textContent.trim())",
+          "stride": 4,
+          "question_index_formula": "q * 4 + optionIndex (0: A, 1: B, 2: C, 3: D)"
+        },
+        "part_2_true_false": {
+          "description": "Các nút chọn Đúng/Sai là các thẻ <button> chứa text 'Đúng' hoặc 'Sai'.",
+          "button_filter": "['Đúng', 'Sai'].includes(b.textContent.trim())",
+          "stride": 2,
+          "subquestion_index_formula": "subIndex * 2 + (choice === 'Đúng' ? 0 : 1)"
+        }
+      },
+      "fast_script_extract_all": "() => {\n  return {\n    title: document.title,\n    bodyText: document.body.innerText,\n    abcdCount: Array.from(document.querySelectorAll('button')).filter(b => ['A', 'B', 'C', 'D'].includes(b.textContent.trim())).length / 4,\n    tfCount: Array.from(document.querySelectorAll('button')).filter(b => ['Đúng', 'Sai'].includes(b.textContent.trim())).length / 2\n  };\n}",
+      "fast_script_fill_answers": "(abcdAnswers, tfAnswers) => {\n  const allButtons = Array.from(document.querySelectorAll('button'));\n  const abcdButtons = allButtons.filter(b => ['A', 'B', 'C', 'D'].includes(b.textContent.trim()));\n  const tfButtons = allButtons.filter(b => ['Đúng', 'Sai'].includes(b.textContent.trim()));\n\n  let abcdCount = 0;\n  for (let q = 0; q < abcdAnswers.length; q++) {\n    const targetChar = abcdAnswers[q];\n    const qButtons = abcdButtons.slice(q * 4, q * 4 + 4);\n    const btn = qButtons.find(b => b.textContent.trim() === targetChar);\n    if (btn) { btn.click(); abcdCount++; }\n  }\n\n  let tfCount = 0;\n  for (let item = 0; item < tfAnswers.length; item++) {\n    const targetChoice = tfAnswers[item];\n    const itemButtons = tfButtons.slice(item * 2, item * 2 + 2);\n    const btn = itemButtons.find(b => b.textContent.trim() === targetChoice);\n    if (btn) { btn.click(); tfCount++; }\n  }\n\n  return {\n    abcdFilled: abcdCount,\n    tfFilled: tfCount,\n    totalSelected: document.querySelectorAll('.selected-answer').length\n  };\n}"
+    }
+  }
+}

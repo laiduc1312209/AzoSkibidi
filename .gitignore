@@ -1,0 +1,13 @@
+# Credentials & Session
+config.txt
+storage_state.json
+azota_localstorage.json
+
+# Temporary files & logs
+node_modules/
+.playwright-mcp/
+*.log
+
+# Keep folder structure
+!config.example.txt
+!DEBAI/.gitkeep
