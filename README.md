@@ -14,7 +14,7 @@
   - Trắc nghiệm lựa chọn Đúng / Sai (các ý $a, b, c, d$ phân tích theo đoạn tư liệu).
 - 🖱️ **Tự động điền đáp án trực tiếp:** Tự động click chọn các đáp án đã giải trên giao diện bài thi của Azota.
 - 🛡️ **An toàn tuyệt đối:** Bot **KHÔNG** tự ý bấm nút *"Nộp bài"*, học sinh luôn có quyền kiểm tra, rà soát lại toàn bộ câu trả lời trước khi chính thức nộp.
-- 🧹 **Tự động dọn dẹp:** Tự động dọn sạch các file đề bài và đáp án tạm thời trong thư mục `DEBAI/` ngay sau khi đã tick xong, đảm bảo không gian làm việc luôn gọn gàng và bảo mật.
+- 🧹 **Tự động dọn dẹp sạch sẽ:** Tự động dọn sạch các file đề bài và đáp án tạm thời trong thư mục `DEBAI/`, đồng thời tự động xóa các ảnh chụp màn hình trung gian không cần thiết trong thư mục `ANH/`, đảm bảo không gian làm việc luôn gọn gàng và tiết kiệm dung lượng.
 
 ---
 

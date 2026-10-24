@@ -12,7 +12,9 @@ Thay vì thao tác thủ công, chậm chạp (đọc câu 1 $\rightarrow$ giả
    - `abcdAnswers = ['A', 'B', 'C', 'A', ...]` (cho 30 câu Phần I)
    - `tfAnswers = ['Đúng', 'Sai', 'Đúng', ...]` (cho 20 ý Phần II)
 3. **ONE-SHOT INJECT (1 lệnh JS duy nhất ~30ms):** Bơm toàn bộ 2 mảng đáp án vào trang web qua hàm JS tự động click tất cả các nút cùng lúc.
-4. **CLEANUP (Dọn dẹp):** Xóa file txt trong `DEBAI/` sau khi điền xong.
+4. **CLEANUP (Dọn dẹp):**
+   - Xóa ngay file txt trong `DEBAI/` sau khi điền xong đáp án.
+   - Xóa bỏ các ảnh chụp màn hình trung gian/tạm thời không cần thiết trong `ANH/` để giải phóng dung lượng.
 
 
 ---

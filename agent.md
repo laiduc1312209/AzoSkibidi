@@ -85,7 +85,10 @@ Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân
 3. **Dọn dẹp thư mục DEBAI:**
    - Sau khi hoàn thành giải và điền đáp án xong cho một bài kiểm tra/đề thi, luôn phải xóa các file liên quan (đề bài, đáp án) trong thư mục `DEBAI/` để giữ thư mục làm việc luôn gọn gàng.
 
-4. **Trích xuất đề bài:**
+4. **Dọn dẹp hình ảnh không cần thiết (ANH/):**
+   - Sau khi dùng xong hoặc báo cáo xong cho người dùng, xóa bỏ các ảnh chụp màn hình trung gian/tạm thời không cần thiết trong thư mục `ANH/`, chỉ giữ lại tối thiểu ảnh kết quả hoặc dọn sạch theo yêu cầu của người dùng để tránh tốn dung lượng.
+
+5. **Trích xuất đề bài:**
    - Khi ấn nút vào thi, copy toàn bộ nội dung câu hỏi ra file text tương ứng trong `DEBAI/` để phục vụ suy luận giải đề.
 
 ---
@@ -118,4 +121,5 @@ Khi người dùng gửi lệnh `start` (hoặc yêu cầu bắt đầu chu trì
 
 6. **Bước 6: Dọn dẹp dứt điểm (Cleanup)**
    - Ngay sau khi đã điền xong đáp án, tự động xóa sạch file text đề bài và đáp án liên quan trong thư mục `DEBAI/`.
-   - Chụp ảnh màn hình lưu vào thư mục `ANH/` và báo cáo hoàn tất cho người dùng.
+   - Chụp 1 ảnh màn hình hoàn tất lưu vào `ANH/` để báo cáo cho người dùng.
+   - Khi phiên làm việc kết thúc hoặc người dùng đã xác nhận, tự động dọn sạch các ảnh chụp màn hình trung gian/không cần thiết trong thư mục `ANH/`.

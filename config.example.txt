@@ -1,3 +1,3 @@
-https://thptninhgiang.azota.vn/
+https://<link_truong>.azota.vn/
 <tai_khoan_azota_hoac_sdt>
 <mat_khau_azota>
