@@ -51,6 +51,9 @@ Toàn bộ các bước trong Phần 1 này bạn chỉ cần thực hiện đú
 2. **Cài đặt và mở dự án trong Antigravity IDE:**
    - Cài đặt và mở phần mềm **Antigravity IDE** trên máy tính của bạn.
    - Nhìn lên thanh menu góc trên cùng bên trái: Chọn **File** -> **Open Folder...** -> Chọn đúng thư mục **Azoskibidi** đã tải về.
+3. **Cấu hình tối ưu trong Antigravity IDE (Khuyến nghị để đạt tốc độ cao nhất):**
+   - **Bật Turbo Mode:** Trong Antigravity IDE, hãy bật tính năng **Turbo Mode** để trợ lý AI tăng tốc độ phản hồi và suy luận đề thi nhanh nhất có thể.
+   - **Chỉnh Agent Behavior thành "Always Proceed":** Trong mục cài đặt hành vi của Agent (Agent Behavior / Settings), hãy chọn chế độ **Always Proceed** (hoặc tích chọn luôn cho phép) để trợ lý tự động hoàn thành các bước từ đầu đến cuối mà không dừng lại hỏi xác nhận từng thao tác nhỏ.
 
 #### Bước 2: Tự động cài đặt Playwright MCP qua AI Agent (Không cần gõ lệnh)
 Bạn hoàn toàn không cần mở Terminal hay tự gõ dòng lệnh phức tạp. Hãy để trợ lý AI tự làm:
@@ -73,12 +76,12 @@ Bạn hoàn toàn không cần mở Terminal hay tự gõ dòng lệnh phức t�
 3. Bấm chuột phải vào file đó, chọn **Copy** rồi bấm **Paste** ngay tại đó (hoặc bấm phím F2 để đổi tên file thành `config.txt`).
 4. Nhấp đúp chuột vào file `config.txt` để mở bằng phần mềm **Notepad** có sẵn trên máy tính.
 5. Bạn sẽ thấy 3 dòng, hãy sửa lại theo đúng thông tin cá nhân của bạn:
-   - **Dòng 1:** Giữ nguyên link web trường của bạn (ví dụ: `https://thptninhgiang.azota.vn/`).
+   - **Dòng 1:** Điền địa chỉ trang web Azota trường bạn theo định dạng `https://<link_truong>.azota.vn/` (thay `<link_truong>` bằng tên trường của bạn, ví dụ: `https://thptninhgiang.azota.vn/`).
    - **Dòng 2:** Điền tên đăng nhập hoặc số điện thoại tài khoản Azota của bạn.
    - **Dòng 3:** Điền mật khẩu tài khoản Azota của bạn.
    - *Ví dụ mẫu:*
      ```text
-     https://thptninhgiang.azota.vn/
+     https://<link_truong>.azota.vn/
      nguyenvana12b
      MatKhau123@
      ```
@@ -100,6 +103,10 @@ Mở phần mềm **Antigravity IDE**, mở thư mục **Azoskibidi**.
    start
    ```
 3. Nhấn phím **Enter**.
+4. **Lưu ý cực kỳ quan trọng:** Nếu Antigravity IDE có hiển thị bảng thông báo hỏi quyền phê duyệt thực thi (Approval/Permission), bạn hãy:
+   - Tích chọn vào ô: **"Always allow..."** (Luôn cho phép).
+   - Bấm nút: **Submit** (hoặc nút Xác nhận).
+   - Trợ lý AI sẽ tự động đăng nhập, quét đề và thực hiện toàn bộ quy trình cho bạn.
 
 #### Bước 3: Xem danh sách và chọn đề cần làm
 1. Trợ lý sẽ tự động đăng nhập vào Azota và quét toàn bộ danh sách đề chưa làm trong lớp chỉ trong 1 giây.
