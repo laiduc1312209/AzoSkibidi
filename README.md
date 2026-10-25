@@ -37,24 +37,32 @@ Azoskibidi/
 
 ## HƯỚNG DẪN CHI TIẾT TỪNG BƯỚC CHO NGƯỜI MỚI BẮT ĐẦU
 
-Nếu bạn không rành về công nghệ hay lập trình, chỉ cần làm theo từng bước đơn giản dưới đây:
+Nếu bạn không rành về công nghệ hay câu lệnh máy tính, chỉ cần làm theo từng bước đơn giản dưới đây:
 
-### Phần 1: Cài đặt phần mềm cần thiết (Chỉ cần làm 1 lần duy nhất)
+### Phần 1: Cài đặt ban đầu (CHỈ CẦN LÀM 1 LẦN DUY NHẤT ĐẦU TIÊN)
 
-#### Bước 1: Cài đặt Node.js
-1. Mở trình duyệt web (Chrome, Edge, Cốc Cốc...) và truy cập vào trang: https://nodejs.org
-2. Bấm vào nút tải phiên bản **LTS** (phiên bản ổn định được khuyến nghị).
-3. Sau khi tải về file cài đặt (có đuôi `.msi`), bạn nhấp đúp chuột vào file để mở lên.
-4. Nhấn nút **Next** liên tục theo mặc định, tích chọn đồng ý điều khoản, rồi nhấn **Install**. Khi cài xong, nhấn **Finish**.
+Toàn bộ các bước trong Phần 1 này bạn chỉ cần thực hiện đúng một lần duy nhất khi vừa tải dự án về máy. Từ những lần sau trở đi, bạn không cần làm lại nữa.
 
-#### Bước 2: Cài đặt Playwright MCP
-1. Nhấn tổ hợp phím **Windows + R** trên bàn phím.
-2. Nhập chữ `powershell` rồi nhấn phím **Enter**.
-3. Trong cửa sổ màu xanh hiện lên, bạn sao chép và dán dòng lệnh sau vào:
-   ```bash
-   npm install -g @playwright/mcp
+#### Bước 1: Cài đặt Node.js và Mở dự án trong AI Agent (Ví dụ Antigravity IDE)
+1. **Cài đặt Node.js:**
+   - Mở trình duyệt web (Chrome, Edge, Cốc Cốc...) và truy cập vào trang: https://nodejs.org
+   - Bấm vào nút tải phiên bản **LTS** (bản ổn định nhất được khuyến nghị).
+   - Nhấp đúp chuột vào file tải về (đuôi `.msi`), nhấn **Next** liên tục theo mặc định, tích chọn đồng ý điều khoản, rồi nhấn **Install**. Khi cài xong, nhấn **Finish**.
+2. **Cài đặt và mở dự án trong Antigravity IDE:**
+   - Cài đặt và mở phần mềm **Antigravity IDE** trên máy tính của bạn.
+   - Nhìn lên thanh menu góc trên cùng bên trái: Chọn **File** -> **Open Folder...** -> Chọn đúng thư mục **Azoskibidi** đã tải về.
+
+#### Bước 2: Tự động cài đặt Playwright MCP qua AI Agent (Không cần gõ lệnh)
+Bạn hoàn toàn không cần mở Terminal hay tự gõ dòng lệnh phức tạp. Hãy để trợ lý AI tự làm:
+1. Sao chép (copy) đoạn nội dung mẫu sau:
+   ```text
+   Cài đặt và cấu hình giúp tôi Playwright MCP cho dự án này
    ```
-4. Nhấn phím **Enter** và đợi khoảng 10 - 20 giây cho máy tự động cài đặt xong.
+2. Dán (paste) đoạn nội dung trên vào khung chat của trợ lý AI (ở góc phải màn hình) rồi nhấn **Enter**.
+3. **Lưu ý cực kỳ quan trọng:** Trong quá trình trợ lý AI tự động chạy lệnh cài đặt, nếu Antigravity IDE hiển thị bảng thông báo hỏi quyền phê duyệt thực thi (Approval/Permission), bạn hãy:
+   - Tích chọn vào ô: **"Always allow..."** (Luôn cho phép).
+   - Bấm nút: **Submit** (hoặc nút Xác nhận).
+   - Trợ lý AI sẽ tự động hoàn tất việc cài đặt và cấu hình MCP từ A đến Z cho bạn.
 
 ---
 
@@ -78,13 +86,12 @@ Nếu bạn không rành về công nghệ hay lập trình, chỉ cần làm th
 
 ---
 
-### Phần 3: Hướng dẫn sử dụng hàng ngày
+### Phần 3: Hướng dẫn sử dụng hàng ngày (Từ lần thứ 2 trở đi)
 
-Mỗi khi cần kiểm tra đề thi hoặc làm bài, bạn chỉ cần thực hiện 5 bước sau:
+Mỗi khi cần kiểm tra đề thi hoặc làm bài thi, bạn chỉ cần thực hiện 5 bước đơn giản:
 
-#### Bước 1: Mở dự án trong Antigravity IDE (hoặc công cụ AI bạn sử dụng)
-1. Mở phần mềm **Antigravity IDE**.
-2. Vào menu trên cùng: chọn **File** -> **Open Folder...** -> Chọn thư mục **Azoskibidi** trên máy tính của bạn.
+#### Bước 1: Mở dự án trong Antigravity IDE
+Mở phần mềm **Antigravity IDE**, mở thư mục **Azoskibidi**.
 
 #### Bước 2: Gõ lệnh bắt đầu
 1. Nhìn vào khung chat của trợ lý AI ở góc phải màn hình.
