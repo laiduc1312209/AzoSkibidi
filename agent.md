@@ -75,9 +75,12 @@ Azoskibidi/
 
 Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân thủ các quy định sau:
 
-1. **Tối ưu tốc độ xử lý (High-Speed Execution):**
+1. **Tối ưu tốc độ xử lý & Quy tắc kiểm tra 1 bước (One-Shot Check Rule):**
    - Đọc trước file [`azota_selectors.json`](azota_selectors.json) và [`azota_structure.md`](azota_structure.md) để nắm cấu trúc DOM cố định của Azota.
-   - Ưu tiên sử dụng trực tiếp các đoạn mã JS mẫu qua công cụ `browser_evaluate` thay vì gọi `browser_snapshot` lặp đi lặp lại nhiều lần gây nghẽn và làm chậm tốc độ của Agent.
+   - **Tốc độ tối đa khi kiểm tra đề:** Khi người dùng yêu cầu kiểm tra đề chưa làm (hoặc nhận lệnh `start`), Agent **tuyệt đối không** mở từng đề đơn lẻ để thăm dò. Thay vào đó, Agent **chỉ thực hiện đúng 2 lệnh duy nhất**:
+     1. Gọi `browser_navigate` đến thẳng URL lớp học: `https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1`.
+     2. Gọi `browser_evaluate` chạy script `fast_script_one_shot_check_all` để click "Xem thêm" và quét toàn bộ danh sách đề thi/bài tập chưa nộp trong **1 lần duy nhất** (hoàn tất trong vòng 1-2 giây).
+   - Tuyệt đối tránh gọi `browser_snapshot` lặp đi lặp lại nhiều lần gây nghẽn và làm chậm tốc độ.
 
 2. **Quản lý Session:**
    - Ưu tiên sử dụng `storage_state.json` hoặc browser profile có sẵn tại `C:\Users\laidu\.mcp\playwright-profile` để không phải gửi request đăng nhập nhiều lần.
@@ -88,7 +91,13 @@ Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân
 4. **Dọn dẹp hình ảnh không cần thiết (ANH/):**
    - Sau khi dùng xong hoặc báo cáo xong cho người dùng, xóa bỏ các ảnh chụp màn hình trung gian/tạm thời không cần thiết trong thư mục `ANH/`, chỉ giữ lại tối thiểu ảnh kết quả hoặc dọn sạch theo yêu cầu của người dùng để tránh tốn dung lượng.
 
-5. **Trích xuất đề bài:**
+5. **Xử lý bài thi có "Giám Sát" & Chặn giám sát chuyển tab (Anti-Proctoring):**
+   - Khi vào giao diện làm bài, nếu xuất hiện popup *"Đây là bài thi được 'Giám Sát'..."*, Agent lập tức chạy đoạn mã JS trong `azota_structure.md` / `azota_selectors.json` để:
+     - Tự động click *"Xác nhận"* đóng popup.
+     - Chặn và triệt tiêu toàn bộ các sự kiện `visibilitychange`, `blur`, `pagehide`, `mouseleave`.
+     - Giả lập `document.hidden = false` và `visibilityState = 'visible'` vĩnh viễn, tránh trường hợp bị hệ thống Azota ghi nhận chuyển tab hay cảnh báo gian lận.
+
+6. **Trích xuất đề bài:**
    - Khi ấn nút vào thi, copy toàn bộ nội dung câu hỏi ra file text tương ứng trong `DEBAI/` để phục vụ suy luận giải đề.
 
 ---
@@ -101,17 +110,18 @@ Khi người dùng gửi lệnh `start` (hoặc yêu cầu bắt đầu chu trì
    - Mở Playwright MCP, kiểm tra phiên đăng nhập hiện tại tại `https://thptninhgiang.azota.vn/`.
    - Nếu chưa đăng nhập (hoặc bị chuyển hướng về `/auth/login`), tự động đọc thông tin từ `config.txt` (Dòng 1: URL, Dòng 2: username, Dòng 3: password) và thực hiện đăng nhập tự động.
 
-2. **Bước 2: Quét & Phân loại đề thi (Exam Discovery)**
-   - Truy cập trang danh sách bài tập/đề thi lớp học (`/student/classroom-details/...`).
-   - Tự động click "Xem thêm" để quét hết toàn bộ danh sách.
-   - Lọc và tổng hợp tất cả các đề thi có trạng thái **"Chưa thi"** (chưa hoàn thành), kèm thời hạn mở/đóng.
+2. **Bước 2: Quét toàn bộ đề thi chưa làm trong 1 lần gọi (One-Shot Exam Discovery)**
+   - Truy cập thẳng URL lớp học: `https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1`.
+   - Chạy 1 lệnh JS qua `browser_evaluate` (`fast_script_one_shot_check_all`): tự động mở rộng "Xem thêm" và gom tất cả đề thi có trạng thái **"Chưa thi"** và bài tập **"Chưa nộp"** về dạng mảng dữ liệu.
+   - Không chuyển hướng rời khỏi trang lớp học ở bước này.
 
 3. **Bước 3: Hiển thị danh sách đánh số thứ tự (Interactive Selection)**
    - Trình bày danh sách đề thi chưa làm theo bảng kèm **Số thứ tự (STT)** rõ ràng (ví dụ: `1`, `2`, `3`...).
    - Chờ người dùng nhập các STT muốn làm (cho phép chọn 1 đề hoặc chọn nhiều đề cùng lúc, ví dụ: `1, 2` hoặc `1-3`).
 
-4. **Bước 4: Mở đề thi & Trích xuất toàn văn (One-Shot Dump)**
+4. **Bước 4: Mở đề thi, Vô hiệu hóa Giám sát & Trích xuất toàn văn (One-Shot Dump)**
    - Nhấn "Bắt đầu thi" cho đề thi (hoặc mở song song các tab nếu chọn nhiều đề).
+   - **Xử lý Giám Sát (Bypass Proctoring):** Nếu xuất hiện thông báo *"Đây là bài thi được Giám Sát"*, tự động chạy script tắt thông báo và triệt tiêu toàn bộ các listener theo dõi chuyển tab/blur (`fast_script_bypass_supervision`).
    - **Tối ưu tốc độ:** Chạy ngay 1 lệnh trích xuất toàn bộ text của trang (`document.body.innerText`) lưu ra file text tương ứng trong `DEBAI/<ma_de>.txt`. Tuyệt đối không đọc từng câu lẻ trên web.
 
 5. **Bước 5: Giải toàn bộ trên file text & Điền đáp án 1 lần duy nhất (Batch Solve & One-Shot Fill)**

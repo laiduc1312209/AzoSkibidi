@@ -13,7 +13,8 @@
   - Trắc nghiệm 4 phương án lựa chọn ($A, B, C, D$).
   - Trắc nghiệm lựa chọn Đúng / Sai (các ý $a, b, c, d$ phân tích theo đoạn tư liệu).
 - 🖱️ **Tự động điền đáp án trực tiếp:** Tự động click chọn các đáp án đã giải trên giao diện bài thi của Azota.
-- 🛡️ **An toàn tuyệt đối:** Bot **KHÔNG** tự ý bấm nút *"Nộp bài"*, học sinh luôn có quyền kiểm tra, rà soát lại toàn bộ câu trả lời trước khi chính thức nộp.
+- 🛡️ **Tự động xử lý bài thi "Giám Sát" (Anti-Proctoring):** Tự động đóng popup thông báo giám sát và vô hiệu hóa triệt để các event listener theo dõi chuyển tab, mất focus, rời màn hình (`visibilitychange`, `blur`, `mouseleave`), đảm bảo không bị Azota ghi nhận số lần chuyển tab.
+- 🔒 **An toàn tuyệt đối:** Bot **KHÔNG** tự ý bấm nút *"Nộp bài"*, học sinh luôn có quyền kiểm tra, rà soát lại toàn bộ câu trả lời trước khi chính thức nộp.
 - 🧹 **Tự động dọn dẹp sạch sẽ:** Tự động dọn sạch các file đề bài và đáp án tạm thời trong thư mục `DEBAI/`, đồng thời tự động xóa các ảnh chụp màn hình trung gian không cần thiết trong thư mục `ANH/`, đảm bảo không gian làm việc luôn gọn gàng và tiết kiệm dung lượng.
 
 ---

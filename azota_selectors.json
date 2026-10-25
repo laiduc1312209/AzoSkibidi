@@ -14,6 +14,7 @@
       "fast_script_login": "(username, password) => {\n  const userEl = document.querySelector(\"input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']\");\n  const passEl = document.querySelector(\"input[type='password']\");\n  const submitBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Đăng nhập'));\n  if (userEl && passEl) {\n    userEl.value = username;\n    userEl.dispatchEvent(new Event('input', { bubbles: true }));\n    passEl.value = password;\n    passEl.dispatchEvent(new Event('input', { bubbles: true }));\n    if (submitBtn) submitBtn.click();\n    return true;\n  }\n  return false;\n}"
     },
     "classroom_exams": {
+      "fixed_url": "https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1",
       "url_pattern": "/vi/student/classroom-details/:classId/1",
       "selectors": {
         "view_more_pending": "button:has-text('Xem thêm')",
@@ -22,7 +23,7 @@
         "exam_status": ".text-slate-400, span, div",
         "badge_uncompleted": "text='Chưa thi'"
       },
-      "fast_script_get_uncompleted_exams": "() => {\n  // Expand list first\n  const viewMoreBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Xem thêm');\n  if (viewMoreBtn) viewMoreBtn.click();\n  \n  const examLinks = Array.from(document.querySelectorAll(\"a[href*='/vi/de-thi/']\"));\n  const uncompleted = [];\n  \n  examLinks.forEach(link => {\n    const text = link.innerText;\n    if (text.includes('Chưa thi')) {\n      const lines = text.split('\\n').map(s => s.trim()).filter(Boolean);\n      const href = link.getAttribute('href');\n      const title = lines[0] || 'Đề thi';\n      const timeLimit = lines.find(l => l.includes('Thời gian') || l.includes('Thi trước')) || 'Không thời hạn';\n      uncompleted.push({ title, timeLimit, href, fullUrl: window.location.origin + href });\n    }\n  });\n  return uncompleted;\n}"
+      "fast_script_one_shot_check_all": "() => {\n  Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim() === 'Xem thêm').forEach(b => b.click());\n  const uncompletedExams = [];\n  Array.from(document.querySelectorAll(\"a[href*='/vi/de-thi/']\")).forEach(link => {\n    if (link.innerText.includes('Chưa thi')) {\n      const lines = link.innerText.split('\\n').map(s => s.trim()).filter(Boolean);\n      const codeMatch = link.href.match(/\\/vi\\/de-thi\\/([a-zA-Z0-9]+)/);\n      uncompletedExams.push({\n        title: lines[0] || 'Đề thi',\n        code: codeMatch ? codeMatch[1] : '',\n        deadline: lines.find(l => l.includes('Thời gian') || l.includes('Thi trước')) || 'Không thời hạn',\n        url: link.href\n      });\n    }\n  });\n  const uncompletedAssignments = [];\n  Array.from(document.querySelectorAll(\"a[href*='/vi/bai-tap/']\")).forEach(link => {\n    if (link.innerText.includes('Chưa nộp')) {\n      const lines = link.innerText.split('\\n').map(s => s.trim()).filter(Boolean);\n      uncompletedAssignments.push({\n        title: lines.find(l => l !== 'Chưa nộp' && l.length > 2) || 'Bài tập',\n        deadline: lines.find(l => l.includes('Hạn cuối') || l.includes('Bắt đầu nộp')) || '',\n        url: link.href\n      });\n    }\n  });\n  return { uncompletedExams, uncompletedAssignments };\n}"
     },
     "exam_entry": {
       "url_pattern": "/vi/de-thi/:examHash",
@@ -38,10 +39,13 @@
       "selectors": {
         "timer": ".timer-container, [class*='timer']",
         "submit_button": "button:has-text('Nộp bài')",
+        "modal_supervised": ".modal, .ant-modal, div:has-text('Đây là bài thi được \"Giám Sát\"')",
+        "confirm_supervised_button": "button:has-text('Xác nhận')",
         "drawer_menu_button": "button[azt-track-service*='take-test']",
         "drawer_grid_button": "button:has(svg.lucide-layout-grid), button:has(svg.lucide-grid-2x2)",
         "selected_answer": ".selected-answer, .border-selected-answer"
       },
+      "fast_script_bypass_supervision": "() => {\n  const confirmBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Xác nhận');\n  if (confirmBtn) confirmBtn.click();\n\n  window.onblur = null;\n  window.onfocus = null;\n  document.onvisibilitychange = null;\n  window.onpagehide = null;\n\n  const stopPropagationHandler = e => {\n    e.stopImmediatePropagation();\n    e.stopPropagation();\n  };\n\n  ['visibilitychange', 'webkitvisibilitychange', 'blur', 'focusout', 'mouseleave', 'pagehide'].forEach(evt => {\n    window.addEventListener(evt, stopPropagationHandler, true);\n    document.addEventListener(evt, stopPropagationHandler, true);\n  });\n\n  try {\n    Object.defineProperty(Document.prototype, 'hidden', { get: () => false, configurable: true });\n    Object.defineProperty(Document.prototype, 'visibilityState', { get: () => 'visible', configurable: true });\n    Object.defineProperty(Document.prototype, 'webkitVisibilityState', { get: () => 'visible', configurable: true });\n    Object.defineProperty(Document.prototype, 'fullscreenElement', { get: () => document.documentElement, configurable: true });\n    Document.prototype.hasFocus = function() { return true; };\n  } catch (e) {}\n\n  const originalAddEventListener = EventTarget.prototype.addEventListener;\n  const blockedEvents = new Set(['visibilitychange', 'webkitvisibilitychange', 'blur', 'focusout', 'mouseleave', 'pagehide']);\n  EventTarget.prototype.addEventListener = function(type, listener, options) {\n    if (blockedEvents.has(type)) return;\n    return originalAddEventListener.call(this, type, listener, options);\n  };\n\n  return { bypassed: true, popupClosed: !!confirmBtn };\n}",
       "dom_rules": {
         "part_1_multiple_choice": {
           "description": "Các nút chọn phương án A, B, C, D là các thẻ <button> có text chính xác là A, B, C, D.",
