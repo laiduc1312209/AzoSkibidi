@@ -21,7 +21,7 @@ Khi cần kiểm tra danh sách đề thi chưa làm, Agent **tuyệt đối kh�
 3. **ONE-SHOT INJECT (1 lệnh JS duy nhất ~30ms):** Bơm toàn bộ 2 mảng đáp án vào trang web qua hàm JS tự động click tất cả các nút cùng lúc.
 4. **CLEANUP (Dọn dẹp):**
    - Xóa ngay file txt trong `DEBAI/` sau khi điền xong đáp án.
-   - Xóa bỏ các ảnh chụp màn hình trung gian/tạm thời không cần thiết trong `ANH/` để giải phóng dung lượng.
+   - Hoàn toàn không chụp ảnh màn hình để bảo toàn tốc độ cao nhất và giữ thư mục dự án sạch sẽ.
 
 
 ---

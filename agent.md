@@ -36,7 +36,6 @@ Azoskibidi/
 ├── azota_structure.md         # Sổ tay kiến trúc DOM & Snippets siêu tốc cho AI Agent
 ├── README.md                  # Hướng dẫn sử dụng cho người dùng & cộng đồng
 ├── agent.md                   # Tài liệu hướng dẫn cho Agent / Developer
-├── ANH/                       # Thư mục lưu trữ toàn bộ ảnh chụp màn hình
 └── DEBAI/                     # Thư mục tạm lưu trữ đề bài/đáp án (tự động xóa sau khi điền)
 ```
 
@@ -88,8 +87,8 @@ Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân
 3. **Dọn dẹp thư mục DEBAI:**
    - Sau khi hoàn thành giải và điền đáp án xong cho một bài kiểm tra/đề thi, luôn phải xóa các file liên quan (đề bài, đáp án) trong thư mục `DEBAI/` để giữ thư mục làm việc luôn gọn gàng.
 
-4. **Dọn dẹp hình ảnh không cần thiết (ANH/):**
-   - Sau khi dùng xong hoặc báo cáo xong cho người dùng, xóa bỏ các ảnh chụp màn hình trung gian/tạm thời không cần thiết trong thư mục `ANH/`, chỉ giữ lại tối thiểu ảnh kết quả hoặc dọn sạch theo yêu cầu của người dùng để tránh tốn dung lượng.
+4. **Tuyệt đối không chụp ảnh màn hình (Zero Screenshot Overhead):**
+   - Không gọi công cụ `browser_take_screenshot` trong bất kỳ bước nào. Việc không chụp ảnh giúp loại bỏ độ trễ 1-2 giây, tối ưu hóa 100% tốc độ thực thi và không làm rác thư mục dự án.
 
 5. **Xử lý bài thi có "Giám Sát" & Chặn giám sát chuyển tab (Anti-Proctoring):**
    - Khi vào giao diện làm bài, nếu xuất hiện popup *"Đây là bài thi được 'Giám Sát'..."*, Agent lập tức chạy đoạn mã JS trong `azota_structure.md` / `azota_selectors.json` để:
@@ -129,7 +128,6 @@ Khi người dùng gửi lệnh `start` (hoặc yêu cầu bắt đầu chu trì
    - **Điền siêu tốc trong ~30ms:** Thực thi 1 đoạn mã JS duy nhất qua `browser_evaluate` để tự động click chọn toàn bộ đáp án vào tất cả các câu trên giao diện Azota cùng một lúc. Không click lắt nhắt từng câu.
    - Giữ nguyên bài thi (không tự ý bấm "Nộp bài" trừ khi người dùng ra lệnh).
 
-6. **Bước 6: Dọn dẹp dứt điểm (Cleanup)**
+6. **Bước 6: Dọn dẹp dứt điểm & Báo cáo (Cleanup)**
    - Ngay sau khi đã điền xong đáp án, tự động xóa sạch file text đề bài và đáp án liên quan trong thư mục `DEBAI/`.
-   - Chụp 1 ảnh màn hình hoàn tất lưu vào `ANH/` để báo cáo cho người dùng.
-   - Khi phiên làm việc kết thúc hoặc người dùng đã xác nhận, tự động dọn sạch các ảnh chụp màn hình trung gian/không cần thiết trong thư mục `ANH/`.
+   - Không chụp ảnh màn hình; lập tức báo cáo trực tiếp trong chat để người dùng tự kiểm tra trên web và xác nhận nộp bài.
