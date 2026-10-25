@@ -36,7 +36,7 @@ Azoskibidi/
 ├── azota_structure.md         # Sổ tay kiến trúc DOM & Snippets siêu tốc cho AI Agent
 ├── README.md                  # Hướng dẫn sử dụng cho người dùng & cộng đồng
 ├── agent.md                   # Tài liệu hướng dẫn cho Agent / Developer
-└── DEBAI/                     # Thư mục tạm lưu trữ đề bài/đáp án (tự động xóa sau khi điền)
+└── DEBAI/                     # Thư mục lưu trữ đề bài/đáp án đã trích xuất (giữ lại để ôn tập)
 ```
 
 ### Chi tiết các tệp tin dữ liệu:
@@ -84,8 +84,8 @@ Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân
 2. **Quản lý Session:**
    - Ưu tiên sử dụng `storage_state.json` hoặc browser profile có sẵn tại `C:\Users\laidu\.mcp\playwright-profile` để không phải gửi request đăng nhập nhiều lần.
 
-3. **Dọn dẹp thư mục DEBAI:**
-   - Sau khi hoàn thành giải và điền đáp án xong cho một bài kiểm tra/đề thi, luôn phải xóa các file liên quan (đề bài, đáp án) trong thư mục `DEBAI/` để giữ thư mục làm việc luôn gọn gàng.
+3. **Lưu trữ thư mục DEBAI:**
+   - Giữ lại toàn bộ các file đề bài và đáp án đã trích xuất trong thư mục `DEBAI/` để người dùng có thể tra cứu, xem lại đề và ôn tập bất cứ lúc nào (không xóa sau khi làm bài).
 
 4. **Tuyệt đối không chụp ảnh màn hình (Zero Screenshot Overhead):**
    - Không gọi công cụ `browser_take_screenshot` trong bất kỳ bước nào. Việc không chụp ảnh giúp loại bỏ độ trễ 1-2 giây, tối ưu hóa 100% tốc độ thực thi và không làm rác thư mục dự án.
@@ -128,6 +128,6 @@ Khi người dùng gửi lệnh `start` (hoặc yêu cầu bắt đầu chu trì
    - **Điền siêu tốc trong ~30ms:** Thực thi 1 đoạn mã JS duy nhất qua `browser_evaluate` để tự động click chọn toàn bộ đáp án vào tất cả các câu trên giao diện Azota cùng một lúc. Không click lắt nhắt từng câu.
    - Giữ nguyên bài thi (không tự ý bấm "Nộp bài" trừ khi người dùng ra lệnh).
 
-6. **Bước 6: Dọn dẹp dứt điểm & Báo cáo (Cleanup)**
-   - Ngay sau khi đã điền xong đáp án, tự động xóa sạch file text đề bài và đáp án liên quan trong thư mục `DEBAI/`.
+6. **Bước 6: Báo cáo hoàn tất (Lưu trữ đề bài)**
+   - Giữ nguyên các file text đề bài và đáp án trong thư mục `DEBAI/` để người dùng có thể xem lại hoặc học tập.
    - Không chụp ảnh màn hình; lập tức báo cáo trực tiếp trong chat để người dùng tự kiểm tra trên web và xác nhận nộp bài.

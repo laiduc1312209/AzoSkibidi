@@ -13,7 +13,7 @@ Azoskibidi là công cụ trợ lý học tập thông minh chạy trên nền t
 - Tự động điền đáp án trong 30 mili-giây: Sử dụng mã script bơm trực tiếp vào giao diện web để click toàn bộ đáp án cùng lúc, tiết kiệm tối đa thời gian làm bài.
 - Chống giám sát chuyển tab (Anti-Proctoring): Tự động tắt thông báo giám sát và vô hiệu hóa triệt để các trình theo dõi đổi tab, giúp học sinh có thể chuyển tab, lướt web thoải mái mà Azota vẫn ghi nhận 0 lần vi phạm.
 - An toàn tuyệt đối: Hệ thống không bao giờ tự ý bấm nút "Nộp bài", người dùng luôn có quyền kiểm tra lại bài thi trên màn hình trước khi quyết định nộp.
-- Tự động dọn dẹp sạch sẽ: Toàn bộ các file đề bài tạm thời trong thư mục DEBAI đều được xóa sạch ngay sau khi đã điền xong đáp án.
+- Tự động lưu trữ đề bài: Toàn bộ các file đề bài và lời giải trích xuất được lưu trữ cẩn thận trong thư mục DEBAI để bạn tiện xem lại và ôn tập bất cứ lúc nào.
 
 ---
 
@@ -30,7 +30,7 @@ Azoskibidi/
 ├── azota_structure.md         # Tài liệu hướng dẫn cấu trúc DOM web cho AI Agent
 ├── README.md                  # Hướng dẫn sử dụng chi tiết dành cho người dùng
 ├── agent.md                   # Quy chuẩn vận hành kỹ thuật dành cho AI Agent
-└── DEBAI/                     # Thư mục tạm chứa đề thi (tự động xóa sau khi làm xong)
+└── DEBAI/                     # Thư mục lưu trữ đề thi và lời giải (tiện ôn tập)
 ```
 
 ---
@@ -111,7 +111,7 @@ Mỗi khi cần kiểm tra đề thi hoặc làm bài, bạn chỉ cần thực 
 #### Bước 4: Chờ hệ thống tự động làm bài
 1. Trợ lý sẽ tự động mở đề thi, vô hiệu hóa các cảnh báo giám sát.
 2. Trích xuất toàn bộ câu hỏi, suy luận đáp án và tự động tích chọn hết tất cả các câu trên màn hình chỉ trong 30 mili-giây.
-3. Sau khi điền xong, file đề tạm sẽ tự động được xóa bỏ để giữ máy tính sạch sẽ.
+3. Sau khi điền xong, file đề bài và lời giải sẽ được lưu lại trong thư mục DEBAI để bạn có thể xem lại khi cần ôn thi.
 
 #### Bước 5: Kiểm tra lại và Bấm Nộp bài
 1. Trợ lý sẽ thông báo cho bạn biết bài thi đã được điền xong.
