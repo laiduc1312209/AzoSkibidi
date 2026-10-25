@@ -71,11 +71,13 @@ Bạn hoàn toàn không cần mở Terminal hay tự gõ dòng lệnh phức t�
 
 ### Phần 2: Cài đặt tài khoản Azota của bạn
 
-1. Mở thư mục **Azoskibidi** trên máy tính của bạn.
-2. Tìm file có tên là `config.example.txt`.
-3. Bấm chuột phải vào file đó, chọn **Copy** rồi bấm **Paste** ngay tại đó (hoặc bấm phím F2 để đổi tên file thành `config.txt`).
-4. Nhấp đúp chuột vào file `config.txt` để mở bằng phần mềm **Notepad** có sẵn trên máy tính.
-5. Bạn sẽ thấy 3 dòng, hãy sửa lại theo đúng thông tin cá nhân của bạn:
+1. Mở cửa sổ **Terminal** trong Antigravity IDE (bằng cách vào menu trên cùng chọn **Terminal** -> **New Terminal**, hoặc nhấn tổ hợp phím **Ctrl + `** trên bàn phím).
+2. Dán dòng lệnh sau vào Terminal và nhấn phím **Enter**:
+   ```bash
+   copy config.example.txt config.txt
+   ```
+3. Mở file `config.txt` vừa được tạo (bấm trực tiếp vào tên file `config.txt` ở cột danh sách file bên trái của Antigravity IDE, hoặc mở bằng Notepad).
+4. Bạn sẽ thấy 3 dòng, hãy sửa lại theo đúng thông tin cá nhân của bạn:
    - **Dòng 1:** Điền địa chỉ trang web Azota trường bạn theo định dạng `https://<link_truong>.azota.vn/` (thay `<link_truong>` bằng tên trường của bạn, ví dụ: `https://thptninhgiang.azota.vn/`).
    - **Dòng 2:** Điền tên đăng nhập hoặc số điện thoại tài khoản Azota của bạn.
    - **Dòng 3:** Điền mật khẩu tài khoản Azota của bạn.
@@ -85,7 +87,7 @@ Bạn hoàn toàn không cần mở Terminal hay tự gõ dòng lệnh phức t�
      nguyenvana12b
      MatKhau123@
      ```
-6. Nhấn tổ hợp phím **Ctrl + S** trên bàn phím để lưu file lại, sau đó đóng cửa sổ Notepad.
+5. Nhấn tổ hợp phím **Ctrl + S** trên bàn phím để lưu file lại.
 
 ---
 
