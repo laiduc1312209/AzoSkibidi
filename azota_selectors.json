@@ -4,17 +4,22 @@
   "platform": "Azota",
   "description": "Cấu trúc DOM, Selectors và Code snippets mẫu để AI Agent thao tác với tốc độ tối đa không cần quét lại trang.",
   "pages": {
-    "login": {
-      "url_pattern": "/vi/auth/login",
+    "auth": {
+      "login_url_pattern": "/vi/auth/login",
+      "logout_url_pattern": "/vi/auth/logout",
       "selectors": {
         "username_input": "input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']",
         "password_input": "input[type='password']",
         "submit_button": "button:has-text('Đăng nhập')"
       },
-      "fast_script_login": "(username, password) => {\n  const userEl = document.querySelector(\"input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']\");\n  const passEl = document.querySelector(\"input[type='password']\");\n  const submitBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Đăng nhập'));\n  if (userEl && passEl) {\n    userEl.value = username;\n    userEl.dispatchEvent(new Event('input', { bubbles: true }));\n    passEl.value = password;\n    passEl.dispatchEvent(new Event('input', { bubbles: true }));\n    if (submitBtn) submitBtn.click();\n    return true;\n  }\n  return false;\n}"
+      "fast_script_check_session": "() => {\n  const userObj = localStorage.getItem('user_obj');\n  if (!userObj) return { loggedIn: false };\n  try {\n    const user = JSON.parse(userObj);\n    return {\n      loggedIn: true,\n      userName: (user.userName || '').toLowerCase().trim(),\n      phone: (user.phone || '').toLowerCase().trim(),\n      fullName: user.fullName || '',\n      id: user.id\n    };\n  } catch (e) {\n    return { loggedIn: false };\n  }\n}",
+      "fast_script_login": "(username, password) => {\n  const userEl = document.querySelector(\"input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']\");\n  const passEl = document.querySelector(\"input[type='password']\");\n  const submitBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Đăng nhập'));\n  if (userEl && passEl && submitBtn) {\n    userEl.value = username;\n    userEl.dispatchEvent(new Event('input', { bubbles: true }));\n    userEl.dispatchEvent(new Event('change', { bubbles: true }));\n    passEl.value = password;\n    passEl.dispatchEvent(new Event('input', { bubbles: true }));\n    passEl.dispatchEvent(new Event('change', { bubbles: true }));\n    submitBtn.click();\n    return true;\n  }\n  return false;\n}"
+    },
+    "student_dashboard": {
+      "url_pattern": "/vi/student/classroom/0",
+      "fast_script_get_classroom_url": "() => {\n  const classLink = document.querySelector(\"a[href*='/student/classroom-details/']\");\n  return classLink ? classLink.href : null;\n}"
     },
     "classroom_exams": {
-      "fixed_url": "https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1",
       "url_pattern": "/vi/student/classroom-details/:classId/1",
       "selectors": {
         "view_more_pending": "button:has-text('Xem thêm')",

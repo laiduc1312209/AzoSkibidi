@@ -8,10 +8,16 @@
 
 Thay vì thao tác thủ công, chậm chạp (đọc câu 1 $\rightarrow$ giải câu 1 $\rightarrow$ click web $\rightarrow$ đọc câu 2...), quy trình tối ưu của Agent phải thực hiện theo mô hình gom cụm (Batching):
 
-### ⚡ Quy tắc Kiểm tra Đề siêu tốc trong 2 bước (One-Shot Check):
-Khi cần kiểm tra danh sách đề thi chưa làm, Agent **tuyệt đối không** mở từng link đề đơn lẻ. Chỉ thực hiện đúng 2 bước:
-1. `browser_navigate` thẳng vào URL lớp 12B: `https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1`.
-2. `browser_evaluate` chạy script `fast_script_one_shot_check_all` quét sạch toàn bộ trang chỉ trong **1 lượt duy nhất (~1 giây)**.
+### 🔄 Quy tắc Đồng bộ Tài khoản & Tự động Chuyển đổi (Auto Account Sync):
+Khi bắt đầu, Agent luôn đọc file `config.txt` và chạy script `fast_script_check_session` để kiểm tra tài khoản đang lưu trong trình duyệt:
+- Nếu tài khoản hiện tại khác với tài khoản trong `config.txt` (hoặc chưa đăng nhập): Tự động điều hướng đến `${schoolUrl}/vi/auth/logout`, rồi đến `${schoolUrl}/vi/auth/login` để đăng nhập đúng tài khoản mới trong `config.txt`.
+- Nếu tài khoản đã trùng khớp: Giữ nguyên phiên làm việc, không cần đăng nhập lại.
+
+### ⚡ Quy tắc Tìm Lớp & Kiểm tra Đề siêu tốc (Dynamic Classroom Discovery & One-Shot Check):
+Không hardcode mã lớp học, Agent thực hiện quét động:
+1. `browser_navigate` vào trang danh sách lớp học: `${schoolUrl}/vi/student/classroom/0`.
+2. Lấy link lớp học qua `document.querySelector("a[href*='/student/classroom-details/']").href` và điều hướng vào trang lớp học đó.
+3. `browser_evaluate` chạy script `fast_script_one_shot_check_all` quét sạch toàn bộ đề thi/bài tập chưa nộp trong **1 lượt duy nhất (~1 giây)**.
 
 ### 📝 Quy tắc Làm bài siêu tốc:
 1. **DUMP ĐỀ (1 bước):** Khi vừa vào giao diện thi, lấy toàn bộ text của trang qua `document.body.innerText` và ghi ra file `DEBAI/<ten_de>.txt`.
@@ -37,24 +43,58 @@ Khi cần kiểm tra danh sách đề thi chưa làm, Agent **tuyệt đối kh�
 
 ## 📌 Bảng Selectors & Thao Tác Chi Tiết Theo Từng Trang
 
-### 1. Trang Đăng Nhập (`/vi/auth/login`)
+### 1. Trang Kiểm Tra Phiên & Đăng Nhập (`/vi/auth/login`, `/vi/auth/logout`)
+- **Kiểm tra tài khoản hiện tại qua LocalStorage (fast_script_check_session):**
+  ```javascript
+  () => {
+    const userObj = localStorage.getItem('user_obj');
+    if (!userObj) return { loggedIn: false };
+    try {
+      const user = JSON.parse(userObj);
+      return {
+        loggedIn: true,
+        userName: (user.userName || '').toLowerCase().trim(),
+        phone: (user.phone || '').toLowerCase().trim(),
+        fullName: user.fullName || '',
+        id: user.id
+      };
+    } catch (e) {
+      return { loggedIn: false };
+    }
+  }
+  ```
 - **Username Input:** `input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']`
 - **Password Input:** `input[type='password']`
 - **Nút Submit:** `button:has-text('Đăng nhập')`
-- **Code thực thi tức thì:**
+- **Code đăng nhập tức thì (fast_script_login):**
   ```javascript
-  (() => {
+  ((username, password) => {
     const user = document.querySelector("input[placeholder*='điện thoại'], input[placeholder*='email'], input[placeholder*='username']");
     const pass = document.querySelector("input[type='password']");
     const btn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Đăng nhập'));
     if (user && pass && btn) {
-      user.value = "<USERNAME>";
+      user.value = username;
       user.dispatchEvent(new Event('input', { bubbles: true }));
-      pass.value = "<PASSWORD>";
+      user.dispatchEvent(new Event('change', { bubbles: true }));
+      pass.value = password;
       pass.dispatchEvent(new Event('input', { bubbles: true }));
+      pass.dispatchEvent(new Event('change', { bubbles: true }));
       btn.click();
+      return true;
     }
-  })();
+    return false;
+  })(/* username */, /* password */);
+  ```
+
+---
+
+### 1.1. Trang Danh Sách Lớp Học Của Học Sinh (`/vi/student/classroom/0`)
+- **Tự động tìm link lớp học thực tế của học sinh (fast_script_get_classroom_url):**
+  ```javascript
+  () => {
+    const classLink = document.querySelector("a[href*='/student/classroom-details/']");
+    return classLink ? classLink.href : null;
+  }
   ```
 
 ---

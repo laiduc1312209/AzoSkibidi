@@ -74,29 +74,39 @@ Azoskibidi/
 
 Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân thủ các quy định sau:
 
-1. **Tối ưu tốc độ xử lý & Quy tắc kiểm tra 1 bước (One-Shot Check Rule):**
+1. **Nguyên tắc Đồng bộ Tài khoản bắt buộc (Mandatory Account Sync Rule):**
+   - Trước khi kiểm tra đề thi, Agent **luôn luôn đọc file `config.txt` trước tiên** để lấy thông tin tài khoản đích (`schoolUrl`, `configUsername`, `configPassword`).
+   - Agent chạy script `fast_script_check_session` để kiểm tra tài khoản đang đăng nhập trong trình duyệt (lấy từ `localStorage.getItem('user_obj')`).
+   - **Tự động chuyển đổi tài khoản (Auto-Switch):** Nếu trình duyệt chưa đăng nhập, HOẶC tài khoản đang đăng nhập trong trình duyệt khác với tài khoản trong `config.txt` (khác `userName` và khác `phone`):
+     - Lập tức điều hướng đến `${schoolUrl}/vi/auth/logout` để dọn sạch phiên cũ.
+     - Vào `${schoolUrl}/vi/auth/login`, gọi `fast_script_login` để đăng nhập chính xác bằng thông tin mới từ `config.txt`.
+     - Cập nhật lại `storage_state.json` và `azota_localstorage.json`.
+   - Điều này đảm bảo khi người dùng sửa `config.txt` thành tài khoản khác, hệ thống sẽ tự động đăng xuất tài khoản cũ và đăng nhập vào tài khoản mới ngay lập tức mà không bị giữ phiên cũ.
+
+2. **Điều hướng Lớp học Động (Dynamic Classroom Discovery):**
+   - **Tuyệt đối không hardcode ID lớp học** (không dùng cố định `2443762`). Mỗi học sinh có một mã lớp riêng.
+   - Sau khi đăng nhập, hệ thống điều hướng đến `${schoolUrl}/vi/student/classroom/0` (trang danh sách lớp của học sinh).
+   - Chạy `fast_script_get_classroom_url` để tự động lấy đường dẫn lớp học thực tế của học sinh đó (`a[href*='/student/classroom-details/']`), sau đó vào trang chi tiết lớp học.
+
+3. **Tối ưu tốc độ xử lý & Quy tắc kiểm tra 1 bước (One-Shot Check Rule):**
    - Đọc trước file [`azota_selectors.json`](azota_selectors.json) và [`azota_structure.md`](azota_structure.md) để nắm cấu trúc DOM cố định của Azota.
-   - **Tốc độ tối đa khi kiểm tra đề:** Khi người dùng yêu cầu kiểm tra đề chưa làm (hoặc nhận lệnh `start`), Agent **tuyệt đối không** mở từng đề đơn lẻ để thăm dò. Thay vào đó, Agent **chỉ thực hiện đúng 2 lệnh duy nhất**:
-     1. Gọi `browser_navigate` đến thẳng URL lớp học: `https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1`.
-     2. Gọi `browser_evaluate` chạy script `fast_script_one_shot_check_all` để click "Xem thêm" và quét toàn bộ danh sách đề thi/bài tập chưa nộp trong **1 lần duy nhất** (hoàn tất trong vòng 1-2 giây).
+   - **Tốc độ tối đa khi kiểm tra đề:** Khi đã ở trang chi tiết lớp học, Agent **chỉ thực hiện đúng 1 lệnh duy nhất**:
+     - Gọi `browser_evaluate` chạy script `fast_script_one_shot_check_all` để click "Xem thêm" và quét toàn bộ danh sách đề thi/bài tập chưa nộp trong **1 lần duy nhất** (hoàn tất trong vòng 1-2 giây).
    - Tuyệt đối tránh gọi `browser_snapshot` lặp đi lặp lại nhiều lần gây nghẽn và làm chậm tốc độ.
 
-2. **Quản lý Session:**
-   - Ưu tiên sử dụng `storage_state.json` hoặc browser profile có sẵn tại `C:\Users\laidu\.mcp\playwright-profile` để không phải gửi request đăng nhập nhiều lần.
-
-3. **Lưu trữ thư mục DEBAI:**
+4. **Lưu trữ thư mục DEBAI:**
    - Giữ lại toàn bộ các file đề bài và đáp án đã trích xuất trong thư mục `DEBAI/` để người dùng có thể tra cứu, xem lại đề và ôn tập bất cứ lúc nào (không xóa sau khi làm bài).
 
-4. **Tuyệt đối không chụp ảnh màn hình (Zero Screenshot Overhead):**
+5. **Tuyệt đối không chụp ảnh màn hình (Zero Screenshot Overhead):**
    - Không gọi công cụ `browser_take_screenshot` trong bất kỳ bước nào. Việc không chụp ảnh giúp loại bỏ độ trễ 1-2 giây, tối ưu hóa 100% tốc độ thực thi và không làm rác thư mục dự án.
 
-5. **Xử lý bài thi có "Giám Sát" & Chặn giám sát chuyển tab (Anti-Proctoring):**
+6. **Xử lý bài thi có "Giám Sát" & Chặn giám sát chuyển tab (Anti-Proctoring):**
    - Khi vào giao diện làm bài, nếu xuất hiện popup *"Đây là bài thi được 'Giám Sát'..."*, Agent lập tức chạy đoạn mã JS trong `azota_structure.md` / `azota_selectors.json` để:
      - Tự động click *"Xác nhận"* đóng popup.
      - Chặn và triệt tiêu toàn bộ các sự kiện `visibilitychange`, `blur`, `pagehide`, `mouseleave`.
      - Giả lập `document.hidden = false` và `visibilityState = 'visible'` vĩnh viễn, tránh trường hợp bị hệ thống Azota ghi nhận chuyển tab hay cảnh báo gian lận.
 
-6. **Trích xuất đề bài:**
+7. **Trích xuất đề bài:**
    - Khi ấn nút vào thi, copy toàn bộ nội dung câu hỏi ra file text tương ứng trong `DEBAI/` để phục vụ suy luận giải đề.
 
 ---
@@ -105,12 +115,20 @@ Khi các AI Agent khác hoặc kỹ sư tiếp quản dự án này, cần tuân
 
 Khi người dùng gửi lệnh `start` (hoặc yêu cầu bắt đầu chu trình), Agent tuân thủ nghiêm ngặt quy trình 6 bước sau:
 
-1. **Bước 1: Tự động kết nối & Đăng nhập (Auto-Authentication)**
-   - Mở Playwright MCP, kiểm tra phiên đăng nhập hiện tại tại `https://thptninhgiang.azota.vn/`.
-   - Nếu chưa đăng nhập (hoặc bị chuyển hướng về `/auth/login`), tự động đọc thông tin từ `config.txt` (Dòng 1: URL, Dòng 2: username, Dòng 3: password) và thực hiện đăng nhập tự động.
+1. **Bước 1: Tự động kiểm tra tài khoản & Đồng bộ phiên (Account Sync & Auto-Switch)**
+   - Đọc file `config.txt` (Dòng 1: URL trường `schoolUrl`, Dòng 2: `targetUsername`, Dòng 3: `targetPassword`).
+   - Mở Playwright MCP, kiểm tra tài khoản đang đăng nhập trong trình duyệt bằng `fast_script_check_session`.
+   - **Xử lý đổi tài khoản:**
+     - Nếu chưa đăng nhập HOẶC tài khoản hiện tại không khớp với `targetUsername` trong `config.txt`:
+       1. Điều hướng đến `${schoolUrl}/vi/auth/logout`.
+       2. Chuyển đến `${schoolUrl}/vi/auth/login`.
+       3. Chạy `fast_script_login(targetUsername, targetPassword)` để đăng nhập tài khoản mới.
+       4. Đợi điều hướng thành công vào hệ thống.
+     - Nếu tài khoản hiện tại đã khớp đúng `targetUsername` trong `config.txt`: Tiếp tục ngay, không cần đăng nhập lại.
 
-2. **Bước 2: Quét toàn bộ đề thi chưa làm trong 1 lần gọi (One-Shot Exam Discovery)**
-   - Truy cập thẳng URL lớp học: `https://thptninhgiang.azota.vn/vi/student/classroom-details/2443762/1`.
+2. **Bước 2: Tìm lớp học & Quét toàn bộ đề thi chưa làm trong 1 lần gọi (Dynamic Discovery)**
+   - Truy cập trang danh sách lớp học: `${schoolUrl}/vi/student/classroom/0`.
+   - Chạy `fast_script_get_classroom_url` để lấy link lớp học của học sinh, rồi chuyển hướng vào trang lớp học đó.
    - Chạy 1 lệnh JS qua `browser_evaluate` (`fast_script_one_shot_check_all`): tự động mở rộng "Xem thêm" và gom tất cả đề thi có trạng thái **"Chưa thi"** và bài tập **"Chưa nộp"** về dạng mảng dữ liệu.
    - Không chuyển hướng rời khỏi trang lớp học ở bước này.
 

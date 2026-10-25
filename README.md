@@ -88,6 +88,7 @@ Bạn hoàn toàn không cần mở Terminal hay tự gõ dòng lệnh phức t�
      MatKhau123@
      ```
 5. Nhấn tổ hợp phím **Ctrl + S** trên bàn phím để lưu file lại.
+6. **Lưu ý khi muốn đổi tài khoản:** Bất cứ khi nào bạn muốn chuyển sang một tài khoản Azota khác, bạn chỉ cần mở file `config.txt`, sửa lại thông tin tài khoản mới rồi nhấn **Ctrl + S** để lưu. Ở lần chạy tiếp theo, trợ lý AI sẽ tự động phát hiện thông tin tài khoản đã thay đổi, tự động đăng xuất tài khoản cũ và đăng nhập vào tài khoản mới mà bạn không cần phải làm thêm thao tác nào.
 
 ---
 
